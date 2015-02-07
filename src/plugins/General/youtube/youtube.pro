@@ -39,19 +39,16 @@ RESOURCES = translations/translations.qrc
 	INSTALLS += target
 }
 
-HEADERS += streambrowserfactory.h \
-           streambrowser.h \
-           streamwindow.h \
+HEADERS += youtubefactory.h \
+           youtube.h \
            youtubewindow.h
 
 win32:HEADERS += ../../../../src/qmmpui/general.h
-SOURCES += streambrowserfactory.cpp \
-           streambrowser.cpp \
-           streamwindow.cpp \
+SOURCES += youtubefactory.cpp \
+           youtube.cpp \
            youtubewindow.cpp
 
-FORMS += streamwindow.ui \
-         youtubewindow.ui
+FORMS += youtubewindow.ui
 
 QT += network
 

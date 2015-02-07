@@ -33,16 +33,14 @@ link_directories(${CMAKE_CURRENT_BINARY_DIR}/../../../qmmpui)
 link_directories(${CMAKE_CURRENT_BINARY_DIR}/../../../qmmp)
 
 SET(libyoutube_SRCS
-    streambrowser.cpp
-    streambrowserfactory.cpp
-    streamwindow.cpp
+    youtubefactory.cpp
+    youtube.cpp
     youtubewindow.cpp
 )
 
 SET(libyoutube_MOC_HDRS
-    streambrowserfactory.h
-    streambrowser.h
-    streamwindow.h
+    youtubefactory.h
+    youtube.h
     youtubewindow.h
 )
 
@@ -56,7 +54,6 @@ QT4_WRAP_CPP(libyoutube_MOC_SRCS ${libyoutube_MOC_HDRS})
 # user interface
 
 SET(libyoutube_UIS
-    streamwindow.ui
     youtubewindow.ui
 )
 

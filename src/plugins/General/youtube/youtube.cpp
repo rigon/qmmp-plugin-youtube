@@ -26,21 +26,21 @@
 #include <qmmpui/playlistitem.h>
 #include <qmmpui/mediaplayer.h>
 #include "youtubewindow.h"
-#include "streambrowser.h"
+#include "youtube.h"
 
-StreamBrowser::StreamBrowser(QObject *parent) : QObject(parent)
+Youtube::Youtube(QObject *parent) : QObject(parent)
 {
     m_action = new QAction(tr("YouTube"), this);
     m_action->setIcon(QIcon::fromTheme("applications-internet"));
     m_action->setShortcut(tr("Ctrl+Y"));
     UiHelper::instance()->addAction(m_action, UiHelper::TOOLS_MENU);
-    connect (m_action, SIGNAL(triggered ()), SLOT(showStreamWindow()));
+    connect (m_action, SIGNAL(triggered ()), SLOT(showYoutubeWindow()));
 }
 
-StreamBrowser::~StreamBrowser()
+Youtube::~Youtube()
 {}
 
-void StreamBrowser::showStreamWindow()
+void Youtube::showYoutubeWindow()
 {
     if(!m_streamWindow)
         m_streamWindow = new YoutubeWindow(qApp->activeWindow ());

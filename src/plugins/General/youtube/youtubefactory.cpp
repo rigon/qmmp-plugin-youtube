@@ -17,35 +17,47 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
-#ifndef STREAMBROWSER_H
-#define STREAMBROWSER_H
 
-#include <QPointer>
-#include <qmmpui/general.h>
-#include <qmmp/qmmp.h>
-#include "youtubewindow.h"
+#include <QtGui>
+#include "youtube.h"
+#include "youtubefactory.h"
 
-class QAction;
-class StreamWindow;
-
-/**
-    @author Ilya Kotov <forkotov02@hotmail.ru>
-*/
-
-class StreamBrowser : public QObject
+const GeneralProperties YoutubeFactory::properties() const
 {
-Q_OBJECT
-public:
-    StreamBrowser(QObject *parent = 0);
+    GeneralProperties properties;
+    properties.name = tr("YouTube Plugin");
+    properties.shortName = "youtube";
+    properties.hasAbout = true;
+    properties.hasSettings = false;
+    properties.visibilityControl = false;
+    return properties;
+}
 
-    ~StreamBrowser();
+QObject *YoutubeFactory::create(QObject *parent)
+{
+    return new Youtube(parent);
+}
 
-private slots:
-    void showStreamWindow();
+QDialog *YoutubeFactory::createConfigDialog(QWidget *parent)
+{
+    Q_UNUSED(parent);
+    return 0;
+}
 
-private:
-    QAction *m_action;
-    QPointer<YoutubeWindow> m_streamWindow;
-};
+void YoutubeFactory::showAbout(QWidget *parent)
+{
+    QMessageBox::about (parent, tr("About YouTube Plugin"),
+                        tr("Qmmp YouTube Plugin")+"\n"+
+                        tr("This plugin allows to play musics and playlists from YouTube")+"\n"+
+                        tr("Written by: Ricardo Goncalves <ricar.goncalves@gmail.com>"));
+}
 
-#endif
+QTranslator *YoutubeFactory::createTranslator(QObject *parent)
+{
+    QTranslator *translator = new QTranslator(parent);
+    QString locale = Qmmp::systemLanguageID();
+    translator->load(QString(":/streambrowser_plugin_") + locale);
+    return translator;
+}
+
+Q_EXPORT_PLUGIN2(youtube, YoutubeFactory)

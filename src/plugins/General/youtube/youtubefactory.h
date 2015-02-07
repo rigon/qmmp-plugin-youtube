@@ -20,9 +20,6 @@
 #ifndef STREAMBROWSERFACTORY_H
 #define STREAMBROWSERFACTORY_H
 
-/**
-    @author Ilya Kotov <forkotov02@hotmail.ru>
-*/
 #include <QObject>
 #include <QTranslator>
 #include <QDialog>
@@ -30,7 +27,7 @@
 #include <qmmpui/general.h>
 #include <qmmpui/generalfactory.h>
 
-class StreamBrowserFactory : public QObject, public GeneralFactory
+class YoutubeFactory : public QObject, public GeneralFactory
 {
 Q_OBJECT
 Q_INTERFACES(GeneralFactory)
