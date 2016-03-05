@@ -5,14 +5,14 @@ This is a plugin for Qt-based Multimedia Player (Qmmp) to search and play musics
 
 This plugin has some requirements, you have to install them:
 
-PythonQt (http://pythonqt.sourceforge.net/)
-  : PythonQt is a dynamic Python binding for the Qt framework. It offers an easy way to embed the Python scripting language into your C++ Qt applications.
+ - **PythonQt (http://pythonqt.sourceforge.net/)**<br>
+   PythonQt is a dynamic Python binding for the Qt framework. It offers an easy way to embed the Python scripting language into your C++ Qt applications.
 
-youtube-dl (https://rg3.github.io/youtube-dl/)
-  : youtube-dl is a small command-line program to download videos from YouTube.com and a few more sites.
+ - **youtube-dl (https://rg3.github.io/youtube-dl/)**<br>
+   youtube-dl is a small command-line program to download videos from YouTube.com and a few more sites.
 
-QJson (http://qjson.sourceforge.net/)
-  : QJson is a Qt-based library that maps JSON data to `QVariant` objects and vice versa.
+ - **QJson (http://qjson.sourceforge.net/)**<br>
+   QJson is a Qt-based library that maps JSON data to `QVariant` objects and vice versa.
 
 ## Installation
 
