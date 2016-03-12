@@ -1,0 +1,24 @@
+diff -ruN http/httpinputfactory.cpp http2/httpinputfactory.cpp
+--- http/httpinputfactory.cpp	2016-01-27 06:18:19.000000000 +0000
++++ http2/httpinputfactory.cpp	2016-03-12 20:16:45.412747002 +0000
+@@ -30,7 +30,7 @@
+ const InputSourceProperties HTTPInputFactory::properties() const
+ {
+     InputSourceProperties p;
+-    p.protocols << "http";
++    p.protocols << "http" << "https";
+     p.name = tr("HTTP Plugin");
+     p.shortName = "http";
+     p.hasAbout = true;
+diff -ruN http/httpstreamreader.cpp http2/httpstreamreader.cpp
+--- http/httpstreamreader.cpp	2016-01-27 06:18:19.000000000 +0000
++++ http2/httpstreamreader.cpp	2016-03-12 20:17:12.592747580 +0000
+@@ -351,7 +351,7 @@
+         setErrorString(errorBuffer);
+         emit error();
+     }
+-    QIODevice::close();
++    //QIODevice::close();
+ }
+ 
+ qint64 HttpStreamReader::readBuffer(char* data, qint64 maxlen)
