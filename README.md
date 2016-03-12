@@ -28,7 +28,18 @@ Now, it's time to compile. Move to inside the project location and issue:
 
 With the last command, you are installing the library to QMMP's plugin directory.
 
-If you have problems to compile the project, have a look in the section *Known issues*.
+If you have problems to compile the project, have a look in the section [Known issues](#known-issues).
+
+
+### HTTP plugin patch
+
+The transport plugin of QMMP does not support HTTPS by default, which is required by the YouTube streams.
+So, we have download the source code of the plugin, make the necessary changes, compile it and copy to the QMMP installation:
+
+    wget http://qmmp.ylsoftware.com/files/qmmp-1.0.6.tar.bz2
+    mkdir http
+    tar --strip-components=5 -C http/ -xvf qmmp-1.0.6.tar.bz2 qmmp-1.0.6/src/plugins/Transports/http
+    patch -p0 < http-fix.patch
 
 
 ## Configuration
