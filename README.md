@@ -70,7 +70,9 @@ Now, the Youtube plugin is accessible from the menu inside **Tools** option. Or 
 
             "sys.path.append('/usr/lib/python3.5/site-packages')\n"
 
- - The stream URL of the video is what that is being added to the QMMP's playlist. This causes two problems: the playlist entry is replaced by the URL, making it incomprehensible and URL becomes invalid after some time.
+ - The stream URL of the video is what that is being added to the QMMP's playlist. This causes two problems:
+  - the playlist entry is replaced by the URL, making it incomprehensible
+  - **the URL becomes invalid after some time**
 
 
 ## Important notes
