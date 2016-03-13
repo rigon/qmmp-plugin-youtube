@@ -45,7 +45,7 @@ So, we have download the source code of the plugin, make the necessary changes, 
 
 Once completed, install the patched plugin to your QMMP installation path:
 
-    sudo cp /usr/lib/qmmp/Transports/libhttp.so /usr/lib/qmmp/Transports/libhttp.so.bak
+    sudo mv /usr/lib/qmmp/Transports/libhttp.so /usr/lib/qmmp/Transports/libhttp.so.bak
     sudo cp src/plugins/Transports/http/libhttp.so /usr/lib/qmmp/Transports/
 
 
