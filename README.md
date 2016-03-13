@@ -37,9 +37,16 @@ The transport plugin of QMMP does not support HTTPS by default, which is require
 So, we have download the source code of the plugin, make the necessary changes, compile it and copy to the QMMP installation:
 
     wget http://qmmp.ylsoftware.com/files/qmmp-1.0.6.tar.bz2
-    mkdir http
-    tar --strip-components=5 -C http/ -xvf qmmp-1.0.6.tar.bz2 qmmp-1.0.6/src/plugins/Transports/http
-    patch -p0 < http-fix.patch
+    tar xvf qmmp-1.0.6.tar.bz2
+    cd qmmp-1.0.6/
+    patch -p0 < ../http-fix.patch
+    cmake .
+    make -j4 http
+
+Once completed, install the patched plugin to your QMMP installation path:
+
+    sudo cp /usr/lib/qmmp/Transports/libhttp.so /usr/lib/qmmp/Transports/libhttp.so.bak
+    sudo cp src/plugins/Transports/http/libhttp.so /usr/lib/qmmp/Transports/
 
 
 ## Configuration
