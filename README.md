@@ -48,6 +48,15 @@ Once completed, install the patched plugin to your QMMP installation path:
     sudo mv /usr/lib/qmmp/Transports/libhttp.so /usr/lib/qmmp/Transports/libhttp.so.bak
     sudo cp src/plugins/Transports/http/libhttp.so /usr/lib/qmmp/Transports/
 
+### ArchLinux users
+
+There is available a package for ArchLinux for this plugin in AUR repository:
+https://aur.archlinux.org/packages/qmmp-plugin-youtube/
+
+You can simply install it by running:
+
+    yaourt qmmp-plugin-youtube
+
 
 ## Configuration
 
