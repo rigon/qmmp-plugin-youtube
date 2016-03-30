@@ -92,3 +92,5 @@ Currently, it is possible to search for videos on Youtube and add them to the se
 I'm still working on new exciting features, to make it easier to use. I hope soon I will have more news!
 
 If you are interested, you can also contribute to this project, that would be **AWESOME**. Feel free to send me a message.
+
+Checkout the [Issues section](https://github.com/rigon/qmmp-plugin-youtube/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement) to see the exciting new features that we have planned.
