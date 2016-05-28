@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009-2013 by Ilya Kotov                                 *
+ *   Copyright (C) 2009-2012 by Ilya Kotov                                 *
  *   forkotov02@hotmail.ru                                                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,39 +18,31 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef YOUTUBEFACTORY_H
-#define YOUTUBEFACTORY_H
+#ifndef HTTPINPUTSOURCE_H
+#define HTTPINPUTSOURCE_H
 
-#include <QObject>
-#include <QAction>
-#include <QStringList>
-#include <qmmp/inputsourcefactory.h>
+#include <qmmp/inputsource.h>
 
-class QTranslator;
+class HttpStreamReader;
 
-/*!
- * @author Ilya Kotov <forkotov02@hotmail.ru>
- */
-class YoutubeFactory : public QObject, InputSourceFactory
+/**
+    @author Ilya Kotov <forkotov02@hotmail.ru>
+*/
+class HTTPInputSource : public InputSource
 {
 Q_OBJECT
-Q_PLUGIN_METADATA(IID "org.qmmp.qmmp.InputSourceFactoryInterface.1.0")
-Q_INTERFACES(InputSourceFactory)
 public:
-    YoutubeFactory(QObject *parent = 0);
+    HTTPInputSource(const QString &url, QObject *parent = 0);
 
-    const InputSourceProperties properties() const;
-    InputSource *create(const QString &url, QObject *parent = 0);
-
-    void showSettings(QWidget *parent);
-    void showAbout(QWidget *parent);
-    QTranslator *createTranslator(QObject *parent);
+    QIODevice *ioDevice();
+    bool initialize();
+    bool isReady();
+    bool isWaiting();
+    QString contentType() const;
 
 private:
-    QAction *m_action;
+    HttpStreamReader *m_reader;
 
-private slots:
-    void showYoutubeWindow();
 };
 
-#endif // YOUTUBEFACTORY_H
+#endif // HTTPINPUTSOURCE_H

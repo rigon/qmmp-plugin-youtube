@@ -22,30 +22,51 @@
 #include <QMessageBox>
 #include <QTranslator>
 
+#include <iostream>
+#include <qmmpui/uihelper.h>
+
 #include "youtube.h"
 #include "youtubefactory.h"
 #include "youtubepreferences.h"
+#include "youtubeinputsource.h"
 
 
-const GeneralProperties YoutubeFactory::properties() const
+YoutubeFactory::YoutubeFactory(QObject *parent) : QObject(parent)
 {
-    GeneralProperties properties;
-    properties.name = tr("YouTube Plugin");
-    properties.shortName = "youtube";
-    properties.hasAbout = true;
-    properties.hasSettings = false;     // TODO: Change to true
-    properties.visibilityControl = false;
-    return properties;
+    m_action = new QAction(tr("YouTube"), this);
+    m_action->setIcon(QIcon::fromTheme("applications-internet"));
+    m_action->setShortcut(tr("Ctrl+Y"));
+    UiHelper::instance()->addAction(m_action, UiHelper::TOOLS_MENU);
+
+    connect(m_action, &QAction::triggered, this, &YoutubeFactory::showYoutubeWindow);
 }
 
-QObject *YoutubeFactory::create(QObject *parent)
+const InputSourceProperties YoutubeFactory::properties() const
 {
-    return new Youtube(parent);
+    InputSourceProperties p;
+    p.protocols << "youtube";
+    p.name = tr("YouTube Plugin");
+    p.shortName = "youtube";
+    p.hasAbout = true;
+    p.hasSettings = true;     // TODO: Change to true
+    //p.visibilityControl = false;
+    return p;
 }
 
-QDialog *YoutubeFactory::createConfigDialog(QWidget *parent)
+InputSource *YoutubeFactory::create(const QString &url, QObject *parent)
 {
-    return new YoutubePreferences(parent);
+    QString newurl(url);
+    newurl.replace(0, 7, "http");
+    std::cout << ">>>>>> Playing " << newurl.toStdString() << std::endl;
+
+    //return new Youtube(parent);
+    return new HTTPInputSource(newurl, parent);
+}
+
+void YoutubeFactory::showSettings(QWidget *parent)
+{
+    YoutubePreferences *preferences = new YoutubePreferences(parent);
+    preferences->show();
 }
 
 void YoutubeFactory::showAbout(QWidget *parent)
@@ -56,10 +77,17 @@ void YoutubeFactory::showAbout(QWidget *parent)
                         tr("Written by: Ricardo Gonçalves <ricardompgoncalves@gmail.com>"));
 }
 
+void YoutubeFactory::showYoutubeWindow()
+{
+    YoutubeWindow *m_streamWindow = new YoutubeWindow(); //qApp->activeWindow());
+    m_streamWindow->show();
+    m_streamWindow->activateWindow();
+}
+
 QTranslator *YoutubeFactory::createTranslator(QObject *parent)
 {
     QTranslator *translator = new QTranslator(parent);
     QString locale = Qmmp::systemLanguageID();
-    translator->load(QString(":/streambrowser_plugin_") + locale);
+    translator->load(QString(":/youtube_plugin_") + locale);
     return translator;
 }

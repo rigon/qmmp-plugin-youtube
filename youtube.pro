@@ -12,7 +12,7 @@ TARGET = youtube
 TEMPLATE = lib
 
 INCLUDEPATH += /usr/include/python3.5m
-unix:LIBS += -lqmmp -lqmmpui -lqjson -lPythonQt -lpython3
+unix:LIBS += -lqmmp -lqmmpui -lqjson -lPythonQt -lpython3 -lcurl
 
 SOURCES += src/youtubewindow.cpp \
 	src/youtubepreferences.cpp \
@@ -20,7 +20,9 @@ SOURCES += src/youtubewindow.cpp \
 	src/youtubevideostreams.cpp \
 	src/youtubedl.cpp \
 	src/youtube.cpp \
-	src/youtubefactory.cpp
+	src/youtubefactory.cpp \
+	src/youtubeinputsource.cpp \
+	src/youtubestreamreader.cpp
 
 HEADERS += src/youtubewindow.h \
 	src/youtubepreferences.h \
@@ -28,7 +30,10 @@ HEADERS += src/youtubewindow.h \
 	src/youtubevideostreams.h \
 	src/youtubedl.h \
 	src/youtube.h \
-	src/youtubefactory.h
+	src/youtubefactory.h \
+	src/youtubeinputsource.h \
+	src/youtubestreamreader.h
+
 
 FORMS += src/youtubewindow.ui \
 	src/youtubepreferences.ui

@@ -18,39 +18,38 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef YOUTUBEFACTORY_H
-#define YOUTUBEFACTORY_H
+#include "youtubestreamreader.h"
+#include "youtubeinputsource.h"
 
-#include <QObject>
-#include <QAction>
-#include <QStringList>
-#include <qmmp/inputsourcefactory.h>
-
-class QTranslator;
-
-/*!
- * @author Ilya Kotov <forkotov02@hotmail.ru>
- */
-class YoutubeFactory : public QObject, InputSourceFactory
+HTTPInputSource::HTTPInputSource(const QString &url, QObject *parent) : InputSource(url,parent)
 {
-Q_OBJECT
-Q_PLUGIN_METADATA(IID "org.qmmp.qmmp.InputSourceFactoryInterface.1.0")
-Q_INTERFACES(InputSourceFactory)
-public:
-    YoutubeFactory(QObject *parent = 0);
+    m_reader = new HttpStreamReader(url, this);
+    connect(m_reader, SIGNAL(ready()),SIGNAL(ready()));
+    connect(m_reader, SIGNAL(error()),SIGNAL(error()));
+}
 
-    const InputSourceProperties properties() const;
-    InputSource *create(const QString &url, QObject *parent = 0);
+QIODevice *HTTPInputSource::ioDevice()
+{
+    return m_reader;
+}
 
-    void showSettings(QWidget *parent);
-    void showAbout(QWidget *parent);
-    QTranslator *createTranslator(QObject *parent);
+bool HTTPInputSource::initialize()
+{
+    m_reader->downloadFile();
+    return true;
+}
 
-private:
-    QAction *m_action;
+bool HTTPInputSource::isReady()
+{
+    return m_reader->isOpen();
+}
 
-private slots:
-    void showYoutubeWindow();
-};
+bool HTTPInputSource::isWaiting()
+{
+    return (!m_reader->bytesAvailable() && m_reader->isOpen());
+}
 
-#endif // YOUTUBEFACTORY_H
+QString HTTPInputSource::contentType() const
+{
+    return m_reader->contentType();
+}
