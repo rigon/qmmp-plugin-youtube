@@ -25,10 +25,11 @@
 #include <iostream>
 #include <qmmpui/uihelper.h>
 
-#include "youtube.h"
 #include "youtubefactory.h"
 #include "youtubepreferences.h"
 #include "youtubeinputsource.h"
+#include "youtubewindow.h"
+#include "youtubedl.h"
 
 
 YoutubeFactory::YoutubeFactory(QObject *parent) : QObject(parent)
@@ -55,12 +56,13 @@ const InputSourceProperties YoutubeFactory::properties() const
 
 InputSource *YoutubeFactory::create(const QString &url, QObject *parent)
 {
-    QString newurl(url);
-    newurl.replace(0, 7, "http");
-    std::cout << ">>>>>> Playing " << newurl.toStdString() << std::endl;
+    QString videoID = url.mid(tr("youtube://").length());
+    QString videoURL = YoutubeDL::runSynchronized(videoID);
+    return new HTTPInputSource(videoURL, parent);
 
-    //return new Youtube(parent);
-    return new HTTPInputSource(newurl, parent);
+//    YoutubeDL *youtubeVideoStreams = new YoutubeDL();
+//    connect(youtubeVideoStreams, &YoutubeDL::streamsAvailable, this, &YoutubeWindow::addTrack);
+//    youtubeVideoStreams->fetchStreams(videoId);
 }
 
 void YoutubeFactory::showSettings(QWidget *parent)
@@ -73,15 +75,8 @@ void YoutubeFactory::showAbout(QWidget *parent)
 {
     QMessageBox::about(parent, tr("About YouTube Plugin"),
                         tr("Qmmp YouTube Plugin")+"\n"+
-                        tr("This plugin allows to play musics and playlists from YouTube")+"\n"+
+                        tr("This plugin allows to play musics directly from YouTube videos")+"\n"+
                         tr("Written by: Ricardo Gonçalves <ricardompgoncalves@gmail.com>"));
-}
-
-void YoutubeFactory::showYoutubeWindow()
-{
-    YoutubeWindow *m_streamWindow = new YoutubeWindow(); //qApp->activeWindow());
-    m_streamWindow->show();
-    m_streamWindow->activateWindow();
 }
 
 QTranslator *YoutubeFactory::createTranslator(QObject *parent)
@@ -90,4 +85,11 @@ QTranslator *YoutubeFactory::createTranslator(QObject *parent)
     QString locale = Qmmp::systemLanguageID();
     translator->load(QString(":/youtube_plugin_") + locale);
     return translator;
+}
+
+void YoutubeFactory::showYoutubeWindow()
+{
+    YoutubeWindow *m_streamWindow = new YoutubeWindow(); //qApp->activeWindow());
+    m_streamWindow->show();
+    m_streamWindow->activateWindow();
 }

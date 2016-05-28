@@ -1,11 +1,12 @@
+#include <iostream>
+
 #include <PythonQt/PythonQt.h>
 #include <QMessageBox>
 #include <QObject>
 
 #include "youtubedl.h"
 
-
-QString script =
+static QString script =
     "import sys\n"
     "sys.path.append('/usr/lib/python3.5/site-packages')\n"
     "from youtube_dl import YoutubeDL\n"
@@ -31,6 +32,22 @@ QString script =
     "            beststream = stream\n"
     "    \n"
     "    return beststream['url']\n";
+
+/*
+static QString script2 =
+    "import sys\n"
+    "sys.path.append('/usr/lib/python3.5/site-packages')\n"
+    "from youtube_dl import YoutubeDL\n"
+    "\n"
+    "def get_stream(id):\n"
+    "    print id\n"
+    "    return id\n";
+
+//    QMessageBox::information(NULL, "Restul", result.toString());
+//    QList<QVariant> list = result.toList();
+//    foreach(QVariant s, list)
+//        QMessageBox::information(NULL, "Result", s.toString());
+*/
 
 
 void YoutubeDL::fetchStreams(QString videoId) {
@@ -66,20 +83,28 @@ void YoutubeDL::run() {
 }
 
 
+QString YoutubeDL::runSynchronized(QString videoID)
+{
+    std::cout << ">> Init Python..." << std::endl;
 
-/*
+    // init PythonQt and Python itself
+    PythonQt::init();
 
-QString script2 =
-    "import sys\n"
-    "sys.path.append('/usr/lib/python3.5/site-packages')\n"
-    "import youtube_dl\n"
-    "def get_stream(id):\n"
-    "    return id";
+    // get a smart pointer to the __main__ module of the Python interpreter
+    PythonQtObjectPtr context = PythonQt::self()->getMainModule();
 
-//    QMessageBox::information(NULL, "Restul", result.toString());
-//    QList<QVariant> list = result.toList();
-//    foreach(QVariant s, list)
-//        QMessageBox::information(NULL, "Result", s.toString());
+    // Arguments to pass
+    QVariantList args;
+    args << videoID;
 
-*/
+    // Run the script
+    std::cout << ">> Running the Python script for VideoID " << videoID.toStdString() << "..." << std::endl;
+    context.evalScript(script);
+    QVariant result = context.call("get_stream", args);
+    QString streamURL = result.toString();
 
+    std::cout << ">> The calculated URL is: " << streamURL.toStdString() << std::endl;
+
+    // Return the stream URL
+    return streamURL;
+}

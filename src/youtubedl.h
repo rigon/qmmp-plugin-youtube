@@ -14,6 +14,7 @@ protected:
 
 public:
     void fetchStreams(QString videoId);
+    static QString runSynchronized(QString videoID);
 };
 
 

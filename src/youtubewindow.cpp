@@ -41,7 +41,7 @@
 
 #include <iostream>
 
-time_t searchTime = 0;
+static time_t searchTime = 0;
 
 
 YoutubeWindow::YoutubeWindow(QWidget *parent) :
@@ -113,12 +113,6 @@ void YoutubeWindow::processSearch(QJsonObject *result)
 
 void YoutubeWindow::on_buttonAdd_clicked()
 {
-    time_t currentTime = time(NULL);
-    if(currentTime - searchTime < 1)   // Limit to 1 request per second
-        return;
-    searchTime = currentTime;
-
-
     // Selected Video
     if(ui->listResults->selectedItems().size() != 1) {
         QMessageBox msgBox;
@@ -127,21 +121,46 @@ void YoutubeWindow::on_buttonAdd_clicked()
         return;
     }
 
-    ui->labelState->setText("Getting YouTube streams...");
-
     // Info about the selected item
     this->selectedTrackInfo = ui->listResults->selectedItems().at(0)->data(Qt::UserRole).toStringList();
 
     // Video ID
-    QString videoId = this->selectedTrackInfo.at(0);
+    QString videoID = this->selectedTrackInfo.at(0);
+    QString url = "youtube://" + videoID;
+    // Track MetaData
+    QString videoTitle = this->selectedTrackInfo.at(1);
+    QString artist = videoTitle.left(videoTitle.indexOf('-')).trimmed();
+    QString title = videoTitle.mid(videoTitle.indexOf('-') + 1).trimmed();
+    QString comment = this->selectedTrackInfo.at(2);
 
-    YoutubeDL *youtubeVideoStreams = new YoutubeDL();
-    connect(youtubeVideoStreams, &YoutubeDL::streamsAvailable, this, &YoutubeWindow::addTrack);
-    youtubeVideoStreams->fetchStreams(videoId);
+    // FileInfo of the track
+    FileInfo *fileInfo = new FileInfo(url);
+    fileInfo->setMetaData(Qmmp::TITLE, title);
+    //fileInfo->setMetaData(Qmmp::ALBUM, "My album");
+    fileInfo->setMetaData(Qmmp::ARTIST, artist);
+    fileInfo->setMetaData(Qmmp::URL, url);
+    fileInfo->setMetaData(Qmmp::COMMENT, comment);
+
+    // Adds the tack to the currentPlayList
+    PlayListTrack *track = new PlayListTrack(fileInfo);
+    PlayListManager::instance()->selectedPlayList()->add(track);
+
+    // Console information
+    std::cout << std::endl << "Selected Video:" << std::endl <<
+        "Title: " << title.toStdString() << std::endl <<
+        "Artist: " << artist.toStdString() << std::endl <<
+        "Video ID: " << this->selectedTrackInfo.at(0).toStdString() << std::endl <<
+        "Description: " << this->selectedTrackInfo.at(2).toStdString() << std::endl <<
+        "Channel: " << this->selectedTrackInfo.at(3).toStdString() << std::endl <<
+        "Thumbnail: " << this->selectedTrackInfo.at(4).toStdString() << std::endl;
 }
 
 void YoutubeWindow::addTrack(YoutubeVideoStreams *streams)
 {
+//    YoutubeDL *youtubeVideoStreams = new YoutubeDL();
+//    connect(youtubeVideoStreams, &YoutubeDL::streamsAvailable, this, &YoutubeWindow::addTrack);
+//    youtubeVideoStreams->fetchStreams(videoId);
+
     // Track MetaData
     QString videoTitle = this->selectedTrackInfo.at(1);
     QString artist = videoTitle.left(videoTitle.indexOf('-')).trimmed();
@@ -170,7 +189,6 @@ void YoutubeWindow::addTrack(YoutubeVideoStreams *streams)
         "Thumbnail: " << selectedTrackInfo.at(4).toStdString() << std::endl;
 
 
-    ui->labelState->setText("Track added!");
 
     // QMessageBox::information(this, "Youtube stream URL", stream.getUrl());
 }

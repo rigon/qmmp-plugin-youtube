@@ -19,7 +19,6 @@ SOURCES += src/youtubewindow.cpp \
 	src/youtubesearch.cpp \
 	src/youtubevideostreams.cpp \
 	src/youtubedl.cpp \
-	src/youtube.cpp \
 	src/youtubefactory.cpp \
 	src/youtubeinputsource.cpp \
 	src/youtubestreamreader.cpp
@@ -29,7 +28,6 @@ HEADERS += src/youtubewindow.h \
 	src/youtubesearch.h \
 	src/youtubevideostreams.h \
 	src/youtubedl.h \
-	src/youtube.h \
 	src/youtubefactory.h \
 	src/youtubeinputsource.h \
 	src/youtubestreamreader.h

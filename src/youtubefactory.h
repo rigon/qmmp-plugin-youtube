@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009-2013 by Ilya Kotov                                 *
- *   forkotov02@hotmail.ru                                                 *
+ *   Copyright (C) 2015-2016 by Ricardo Gonçalves                          *
+ *   ricardompgoncalves@gmail.com                                          *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -28,14 +28,18 @@
 
 class QTranslator;
 
-/*!
- * @author Ilya Kotov <forkotov02@hotmail.ru>
+/**
+ * @author Ricardo Gonçalves <ricardompgoncalves@gmail.com>
  */
 class YoutubeFactory : public QObject, InputSourceFactory
 {
 Q_OBJECT
 Q_PLUGIN_METADATA(IID "org.qmmp.qmmp.InputSourceFactoryInterface.1.0")
 Q_INTERFACES(InputSourceFactory)
+
+private:
+    QAction *m_action;
+
 public:
     YoutubeFactory(QObject *parent = 0);
 
@@ -45,9 +49,6 @@ public:
     void showSettings(QWidget *parent);
     void showAbout(QWidget *parent);
     QTranslator *createTranslator(QObject *parent);
-
-private:
-    QAction *m_action;
 
 private slots:
     void showYoutubeWindow();

@@ -23,7 +23,7 @@ void YoutubeSearch::search(QString search)
     urlQuery.addQueryItem("part", "snippet");
     //urlQuery.addQueryItem("key", "AIzaSyCFj15TpkchL4OUhLD1Q2zgxQnMb7v3XaM");  // Google KEY
     urlQuery.addQueryItem("key", "AIzaSyCgcVV60swEYVzLYI74l-UH0CAEPyvm-0E");    // Warning: Private KEY
-    urlQuery.addQueryItem("type", "playlist,video");
+    urlQuery.addQueryItem("type", "video");     // TODO: Playlist support
     urlQuery.addQueryItem("maxResults", "50");
 
     // Search String
