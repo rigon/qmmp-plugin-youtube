@@ -18,13 +18,13 @@ This plugin has some requirements, you have to install them:
 
 First, you have to download the source code by [Downloading a ZIP Archive](https://github.com/rigon/qmmp-plugin-youtube/archive/master.zip) or by cloning the repository:
 
-    git clone https://github.com/rigon/qmmp-plugin-youtube.git
+	git clone https://github.com/rigon/qmmp-plugin-youtube.git
 
 Now, it's time to compile. Move to inside the project location and issue:
 
-    qmake
-    make
-    sudo cp libyoutube.so /usr/lib/qmmp/General
+	qmake
+	make
+	sudo cp libyoutube.so /usr/lib/qmmp/General
 
 With the last command, you are installing the library to QMMP's plugin directory.
 
@@ -36,17 +36,17 @@ If you have problems to compile the project, have a look in the section [Known i
 The transport plugin of QMMP does not support HTTPS by default, which is required by the YouTube streams.
 So, we have download the source code of the plugin, make the necessary changes, compile it and copy to the QMMP installation:
 
-    wget http://qmmp.ylsoftware.com/files/qmmp-1.0.6.tar.bz2
-    tar xvf qmmp-1.0.6.tar.bz2
-    cd qmmp-1.0.6/
-    patch -p0 < ../http-fix.patch
-    cmake .
-    make -j4 http
+	wget http://qmmp.ylsoftware.com/files/qmmp-1.0.6.tar.bz2
+	tar xvf qmmp-1.0.6.tar.bz2
+	cd qmmp-1.0.6/
+	patch -p0 < ../http-fix.patch
+	cmake .
+	make -j4 http
 
 Once completed, install the patched plugin to your QMMP installation path:
 
-    sudo mv /usr/lib/qmmp/Transports/libhttp.so /usr/lib/qmmp/Transports/libhttp.so.bak
-    sudo cp src/plugins/Transports/http/libhttp.so /usr/lib/qmmp/Transports/
+	sudo mv /usr/lib/qmmp/Transports/libhttp.so /usr/lib/qmmp/Transports/libhttp.so.bak
+	sudo cp src/plugins/Transports/http/libhttp.so /usr/lib/qmmp/Transports/
 
 ### ArchLinux users
 
@@ -55,12 +55,12 @@ https://aur.archlinux.org/packages/qmmp-plugin-youtube/
 
 You can simply install it by running:
 
-    yaourt qmmp-plugin-youtube
+	yaourt qmmp-plugin-youtube
 
 
 ## Configuration
 
-Open QMMP. Now you have to activate the Youtube plugin. 
+Open QMMP. Now you have to activate the Youtube plugin.
 To do so, you have to do the next steps:
 
 **Settings** > **Plugins** > **General** > Check **Youtube Plugin**
@@ -71,17 +71,15 @@ Now, the Youtube plugin is accessible from the menu inside **Tools** option. Or 
 
  - The Python version is hard coded, the version used was ``python 3.5m``. If you have a different version installed, edit the following files and change the referenced lines accordingly:
 
-  - ``youtube.pro``:
+   - ``youtube.pro``:
 
-            INCLUDEPATH += /usr/include/python3.5m
+			 INCLUDEPATH += /usr/include/python3.5m
 
-  - ``src/youtubedl.cpp``:
+   - ``src/youtubedl.cpp``:
 
-            "sys.path.append('/usr/lib/python3.5/site-packages')\n"
+			 "sys.path.append('/usr/lib/python3.5/site-packages')\n"
 
- - The stream URL of the video is what that is being added to the QMMP's playlist. This causes two problems:
-  - the playlist entry is replaced by the URL, making it incomprehensible
-  - **the URL becomes invalid after some time**
+ - The plugin is not loaded when QMMP is started.
 
 
 ## Important notes
