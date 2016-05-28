@@ -49,7 +49,6 @@ static QString script2 =
 //        QMessageBox::information(NULL, "Result", s.toString());
 */
 
-
 void YoutubeDL::fetchStreams(QString videoId) {
     this->videoId = videoId;
 
