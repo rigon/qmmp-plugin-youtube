@@ -35,7 +35,7 @@
 class QTextCodec;
 class QFileInfo;
 class DownloadThread;
-class HTTPInputSource;
+class YoutubeInputSource;
 
 /*! @internal
  *   @author Ilya Kotov <forkotov02@hotmail.ru>
@@ -58,7 +58,7 @@ class HttpStreamReader : public QIODevice
 {
     Q_OBJECT
 public:
-    HttpStreamReader(const QString &url, HTTPInputSource *parent);
+    HttpStreamReader(const QString &url, YoutubeInputSource *parent);
 
     virtual ~HttpStreamReader();
 
@@ -107,7 +107,7 @@ private:
     long m_buffer_size;
     QTextCodec *m_codec;
     DownloadThread *m_thread;
-    HTTPInputSource *m_parent;
+    YoutubeInputSource *m_parent;
 #ifdef WITH_ENCA
     EncaAnalyser m_analyser;
 #endif

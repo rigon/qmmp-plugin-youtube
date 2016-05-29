@@ -57,24 +57,16 @@ void YoutubeDL::fetchStreams(QString videoId) {
 }
 
 
-void YoutubeDL::run() {
+void YoutubeDL::run()
+{
+    // Call Pyhthon Script to determine the URL
+    QString result = YoutubeDL::runSynchronized(this->videoId);
+    // Emits a signal
+    emit streamURLAvailable(result);
 
-    // init PythonQt and Python itself
-    PythonQt::init();
-
-    // get a smart pointer to the __main__ module of the Python interpreter
-    PythonQtObjectPtr context = PythonQt::self()->getMainModule();
-
-    // Arguments to pass
-    QVariantList args;
-    args << this->videoId;
-
-    // Run the script
-    context.evalScript(script);
-    QVariant result = context.call("get_stream", args);
 
     // Process results
-    Stream streamObj(0, "audio/m4a", result.toString());
+    Stream streamObj(0, "audio/m4a", result);
     this->streamsAudio.append(streamObj);
 
     // Emits a signal

@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2012 by Ilya Kotov                                      *
- *   forkotov02@hotmail.ru                                                 *
+ *   Copyright (C) 2012 by Ricardo Gonçalves                               *
+ *   ricardompgoncalves@gmail.com                                          *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -29,7 +29,6 @@
 #include "youtubepreferences.h"
 #include "youtubeinputsource.h"
 #include "youtubewindow.h"
-#include "youtubedl.h"
 
 
 YoutubeFactory::YoutubeFactory(QObject *parent) : QObject(parent)
@@ -56,13 +55,7 @@ const InputSourceProperties YoutubeFactory::properties() const
 
 InputSource *YoutubeFactory::create(const QString &url, QObject *parent)
 {
-    QString videoID = url.mid(tr("youtube://").length());
-    QString videoURL = YoutubeDL::runSynchronized(videoID);
-    return new HTTPInputSource(videoURL, parent);
-
-//    YoutubeDL *youtubeVideoStreams = new YoutubeDL();
-//    connect(youtubeVideoStreams, &YoutubeDL::streamsAvailable, this, &YoutubeWindow::addTrack);
-//    youtubeVideoStreams->fetchStreams(videoId);
+    return new YoutubeInputSource(url, parent);
 }
 
 void YoutubeFactory::showSettings(QWidget *parent)

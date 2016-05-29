@@ -20,36 +20,46 @@
 
 #include "youtubestreamreader.h"
 #include "youtubeinputsource.h"
+#include "youtubedl.h"
 
-HTTPInputSource::HTTPInputSource(const QString &url, QObject *parent) : InputSource(url,parent)
+YoutubeInputSource::YoutubeInputSource(const QString &url, QObject *parent) : InputSource(url, parent)
+{
+    QString videoID = url.mid(tr("youtube://").length());
+
+    YoutubeDL *youtubeVideoStreams = new YoutubeDL();
+    connect(youtubeVideoStreams, &YoutubeDL::streamURLAvailable, this, &YoutubeInputSource::fetchStreamURLComplete);
+    youtubeVideoStreams->fetchStreams(videoID);
+}
+
+void YoutubeInputSource::fetchStreamURLComplete(const QString &url)
 {
     m_reader = new HttpStreamReader(url, this);
     connect(m_reader, SIGNAL(ready()),SIGNAL(ready()));
     connect(m_reader, SIGNAL(error()),SIGNAL(error()));
 }
 
-QIODevice *HTTPInputSource::ioDevice()
+QIODevice *YoutubeInputSource::ioDevice()
 {
     return m_reader;
 }
 
-bool HTTPInputSource::initialize()
+bool YoutubeInputSource::initialize()
 {
     m_reader->downloadFile();
     return true;
 }
 
-bool HTTPInputSource::isReady()
+bool YoutubeInputSource::isReady()
 {
     return m_reader->isOpen();
 }
 
-bool HTTPInputSource::isWaiting()
+bool YoutubeInputSource::isWaiting()
 {
     return (!m_reader->bytesAvailable() && m_reader->isOpen());
 }
 
-QString HTTPInputSource::contentType() const
+QString YoutubeInputSource::contentType() const
 {
     return m_reader->contentType();
 }

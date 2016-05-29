@@ -105,7 +105,7 @@ int curl_progress(void *pointer, double dltotal, double dlnow, double ultotal, d
     return 0;
 }
 
-HttpStreamReader::HttpStreamReader(const QString &url, HTTPInputSource *parent) : QIODevice(parent)
+HttpStreamReader::HttpStreamReader(const QString &url, YoutubeInputSource *parent) : QIODevice(parent)
 {
     m_parent = parent;
     m_url = url;

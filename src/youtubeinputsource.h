@@ -28,11 +28,11 @@ class HttpStreamReader;
 /**
     @author Ilya Kotov <forkotov02@hotmail.ru>
 */
-class HTTPInputSource : public InputSource
+class YoutubeInputSource : public InputSource
 {
 Q_OBJECT
 public:
-    HTTPInputSource(const QString &url, QObject *parent = 0);
+    YoutubeInputSource(const QString &url, QObject *parent = 0);
 
     QIODevice *ioDevice();
     bool initialize();
@@ -43,6 +43,8 @@ public:
 private:
     HttpStreamReader *m_reader;
 
+public slots:
+    void fetchStreamURLComplete(const QString &url);
 };
 
 #endif // HTTPINPUTSOURCE_H

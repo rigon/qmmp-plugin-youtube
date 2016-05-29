@@ -49,6 +49,7 @@ public:
 
 signals:
     void streamsAvailable(YoutubeVideoStreams *streams);
+    void streamURLAvailable(QString &url);
 
 public slots:
     void fetchStreams(QString videoId);
