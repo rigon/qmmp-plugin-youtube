@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2015-2016 by Ricardo Gonçalves                          *
+ *   Copyright (C) 2016 by Ricardo Gonçalves                               *
  *   ricardompgoncalves@gmail.com                                          *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -24,7 +24,10 @@
 #include <QObject>
 #include <QAction>
 #include <QStringList>
+
 #include <qmmp/inputsourcefactory.h>
+
+#include "youtubewindow.h"
 
 class QTranslator;
 
@@ -39,6 +42,7 @@ Q_INTERFACES(InputSourceFactory)
 
 private:
     QAction *m_action;
+    YoutubeWindow *m_youtubeWindow = NULL;
 
 public:
     YoutubeFactory(QObject *parent = 0);

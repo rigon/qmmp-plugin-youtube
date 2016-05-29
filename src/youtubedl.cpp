@@ -1,3 +1,23 @@
+/***************************************************************************
+ *   Copyright (C) 2016 by Ricardo Gonçalves                               *
+ *   ricardompgoncalves@gmail.com                                          *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
+ ***************************************************************************/
+
 #include <iostream>
 
 #include <PythonQt/PythonQt.h>
@@ -49,32 +69,12 @@ static QString script2 =
 //        QMessageBox::information(NULL, "Result", s.toString());
 */
 
-void YoutubeDL::fetchStreams(QString videoId) {
-    this->videoId = videoId;
-
-    // Start the thread to run the script
-    this->start();
-}
-
-
-void YoutubeDL::run()
+YoutubeDL::YoutubeDL()
 {
-    // Call Pyhthon Script to determine the URL
-    QString result = YoutubeDL::runSynchronized(this->videoId);
-    // Emits a signal
-    emit streamURLAvailable(result);
-
-
-    // Process results
-    Stream streamObj(0, "audio/m4a", result);
-    this->streamsAudio.append(streamObj);
-
-    // Emits a signal
-    emit streamsAvailable(this);
+    this->initialize();
 }
 
-
-QString YoutubeDL::runSynchronized(QString videoID)
+void YoutubeDL::initialize()
 {
     std::cout << ">> Init Python..." << std::endl;
 
@@ -82,20 +82,43 @@ QString YoutubeDL::runSynchronized(QString videoID)
     PythonQt::init();
 
     // get a smart pointer to the __main__ module of the Python interpreter
-    PythonQtObjectPtr context = PythonQt::self()->getMainModule();
+    context = PythonQt::self()->getMainModule();
 
+    // Evaluate script
+    context.evalScript(script);
+}
+
+void YoutubeDL::fetchStreams(QString videoId) {
+    this->videoId = videoId;
+
+    // Start the thread to run the script
+//    this->start();
+    this->run();
+}
+
+
+void YoutubeDL::run()
+{
+    // Call Pyhthon Script to determine the URL
     // Arguments to pass
     QVariantList args;
-    args << videoID;
+    args << this->videoId;
+
+    std::cout << ">> Running the Python script for VideoID " << this->videoId.toStdString() << "..." << std::endl;
 
     // Run the script
-    std::cout << ">> Running the Python script for VideoID " << videoID.toStdString() << "..." << std::endl;
-    context.evalScript(script);
     QVariant result = context.call("get_stream", args);
     QString streamURL = result.toString();
 
-    std::cout << ">> The calculated URL is: " << streamURL.toStdString() << std::endl;
+    std::cout << ">> The resulting URL is: " << streamURL.toStdString() << std::endl;
 
-    // Return the stream URL
-    return streamURL;
+    // Emits a signal
+    emit streamURLAvailable(streamURL);
+
+
+    // Process results
+    Stream streamObj(0, "audio/m4a", streamURL);
+    this->streamsAudio.append(streamObj);
+    // Emits a signal
+    emit streamsAvailable(this);
 }

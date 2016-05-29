@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2012 by Ricardo Gonçalves                               *
+ *   Copyright (C) 2016 by Ricardo Gonçalves                               *
  *   ricardompgoncalves@gmail.com                                          *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -82,7 +82,8 @@ QTranslator *YoutubeFactory::createTranslator(QObject *parent)
 
 void YoutubeFactory::showYoutubeWindow()
 {
-    YoutubeWindow *m_streamWindow = new YoutubeWindow(); //qApp->activeWindow());
-    m_streamWindow->show();
-    m_streamWindow->activateWindow();
+    if(m_youtubeWindow == NULL)
+        m_youtubeWindow = new YoutubeWindow(); //qApp->activeWindow());
+    m_youtubeWindow->show();
+    m_youtubeWindow->activateWindow();
 }

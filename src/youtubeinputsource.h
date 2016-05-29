@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009-2012 by Ilya Kotov                                 *
- *   forkotov02@hotmail.ru                                                 *
+ *   Copyright (C) 2016 by Ricardo Gonçalves                               *
+ *   ricardompgoncalves@gmail.com                                          *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,11 +23,13 @@
 
 #include <qmmp/inputsource.h>
 
+#include "youtubedl.h"
+
 class HttpStreamReader;
 
 /**
-    @author Ilya Kotov <forkotov02@hotmail.ru>
-*/
+ *   @author Ricardo Gonçalves <ricardompgoncalves@gmail.com>
+ */
 class YoutubeInputSource : public InputSource
 {
 Q_OBJECT
@@ -41,10 +43,11 @@ public:
     QString contentType() const;
 
 private:
-    HttpStreamReader *m_reader;
+    HttpStreamReader *m_reader = NULL;
+    QString videoID;
 
 public slots:
-    void fetchStreamURLComplete(const QString &url);
+    void fetchStreamURLComplete(QString url);
 };
 
 #endif // HTTPINPUTSOURCE_H

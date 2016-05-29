@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009-2013 by Ilya Kotov                                 *
- *   forkotov02@hotmail.ru                                                 *
+ *   Copyright (C) 2016 by Ricardo Gonçalves                               *
+ *   ricardompgoncalves@gmail.com                                          *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,39 +18,52 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
+#include <iostream>
+#include <unistd.h>
+
 #include "youtubestreamreader.h"
 #include "youtubeinputsource.h"
 #include "youtubedl.h"
 
+static YoutubeDL *youtubeVideoStreams = NULL;
+
+
 YoutubeInputSource::YoutubeInputSource(const QString &url, QObject *parent) : InputSource(url, parent)
 {
-    QString videoID = url.mid(tr("youtube://").length());
-
-    YoutubeDL *youtubeVideoStreams = new YoutubeDL();
-    connect(youtubeVideoStreams, &YoutubeDL::streamURLAvailable, this, &YoutubeInputSource::fetchStreamURLComplete);
-    youtubeVideoStreams->fetchStreams(videoID);
+    this->videoID = url.mid(tr("youtube://").length());
 }
 
-void YoutubeInputSource::fetchStreamURLComplete(const QString &url)
+void YoutubeInputSource::fetchStreamURLComplete(QString url)
 {
+    std::cout << ">>>>>>>> fetchStreamURLComplete" << std::endl;
     m_reader = new HttpStreamReader(url, this);
     connect(m_reader, SIGNAL(ready()),SIGNAL(ready()));
     connect(m_reader, SIGNAL(error()),SIGNAL(error()));
+
+    m_reader->downloadFile();
 }
 
 QIODevice *YoutubeInputSource::ioDevice()
 {
+    std::cout << ">>>>>>>> ioDevice" << std::endl;
     return m_reader;
 }
 
 bool YoutubeInputSource::initialize()
 {
-    m_reader->downloadFile();
+    std::cout << ">>>>>>>> initialize" << std::endl;
+    if(youtubeVideoStreams == NULL)
+       youtubeVideoStreams = new YoutubeDL();
+
+    connect(youtubeVideoStreams, &YoutubeDL::streamURLAvailable, this, &YoutubeInputSource::fetchStreamURLComplete);
+    youtubeVideoStreams->fetchStreams(this->videoID);
+
     return true;
 }
 
 bool YoutubeInputSource::isReady()
 {
+    std::cout << ">>>>>>>> isReady" << std::endl;
     return m_reader->isOpen();
 }
 
