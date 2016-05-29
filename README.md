@@ -24,7 +24,7 @@ Now, it's time to compile. Move to inside the project location and issue:
 
 	qmake
 	make
-	sudo cp libyoutube.so /usr/lib/qmmp/General
+	sudo cp libyoutube.so /usr/lib/qmmp/Input
 
 With the last command, you are installing the library to QMMP's plugin directory.
 
