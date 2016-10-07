@@ -35,7 +35,6 @@ YoutubeInputSource::YoutubeInputSource(const QString &url, QObject *parent) : In
 
 void YoutubeInputSource::fetchStreamURLComplete(QString url)
 {
-    std::cout << ">>>>>>>> fetchStreamURLComplete" << std::endl;
     m_reader = new HttpStreamReader(url, this);
     connect(m_reader, SIGNAL(ready()),SIGNAL(ready()));
     connect(m_reader, SIGNAL(error()),SIGNAL(error()));
@@ -45,13 +44,11 @@ void YoutubeInputSource::fetchStreamURLComplete(QString url)
 
 QIODevice *YoutubeInputSource::ioDevice()
 {
-    std::cout << ">>>>>>>> ioDevice" << std::endl;
     return m_reader;
 }
 
 bool YoutubeInputSource::initialize()
 {
-    std::cout << ">>>>>>>> initialize" << std::endl;
     if(youtubeVideoStreams == NULL)
        youtubeVideoStreams = new YoutubeDL();
 
@@ -63,7 +60,6 @@ bool YoutubeInputSource::initialize()
 
 bool YoutubeInputSource::isReady()
 {
-    std::cout << ">>>>>>>> isReady" << std::endl;
     return m_reader->isOpen();
 }
 
