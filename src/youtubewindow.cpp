@@ -38,7 +38,7 @@
 
 #include "youtubedl.h"
 #include "youtubewindow.h"
-#include "youtubesearch.h"
+#include "youtubeapi.h"
 #include "youtubevideostreams.h"
 #include "youtubepreferences.h"
 
@@ -54,7 +54,7 @@ YoutubeWindow::YoutubeWindow(QWidget *parent) :
     setWindowFlags(Qt::Window | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
     //setAttribute(Qt::WA_DeleteOnClose);
 
-    ui->buttonPreferences->setVisible(false);   // TODO: Remove this line
+    //ui->buttonPreferences->setVisible(false);   // TODO: Remove this line
 
     // Search on open
     this->on_buttonSearch_clicked();
@@ -73,11 +73,40 @@ void YoutubeWindow::on_buttonSearch_clicked()
     // Search String
     QString search(ui->textSearch->text());
 
-    YoutubeSearch *youtubeSearch = new YoutubeSearch();
-    connect(youtubeSearch, &YoutubeSearch::resultsAvailable, this, &YoutubeWindow::processSearch);
-    youtubeSearch->search(search);
+    YoutubeAPI *youtubeAPI = new YoutubeAPI();
+    connect(youtubeAPI, &YoutubeAPI::resultsAvailable, this, &YoutubeWindow::processSearch);
+    youtubeAPI->searchList(search);
 }
 
+
+void YoutubeWindow::on_buttonSearchRelated_clicked()
+{
+    // Selected Video
+    if(ui->listResults->selectedItems().size() != 1) {
+        QMessageBox msgBox;
+        msgBox.setText("Select one item first!");
+        msgBox.exec();
+        return;
+    }
+
+    // Limit the number of requests
+    time_t currentTime = time(NULL);
+    if(currentTime - searchTime < 1)   // Limit to 1 request per second
+        return;
+    searchTime = currentTime;
+
+    // Info about the selected item
+    this->selectedTrackInfo = ui->listResults->selectedItems().at(0)->data(Qt::UserRole).toStringList();
+
+    // Video ID
+    QString videoID = this->selectedTrackInfo.at(0);
+
+    ui->labelState->setText("Searching...");
+
+    YoutubeAPI *youtubeAPI = new YoutubeAPI();
+    connect(youtubeAPI, &YoutubeAPI::resultsAvailable, this, &YoutubeWindow::processSearch);
+    youtubeAPI->searchRelated(videoID);
+}
 
 void YoutubeWindow::processSearch(QJsonObject *result)
 {

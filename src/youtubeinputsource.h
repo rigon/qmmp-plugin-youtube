@@ -46,8 +46,9 @@ private:
     HttpStreamReader *m_reader = NULL;
     QString videoID;
 
-public slots:
+private slots:
     void fetchStreamURLComplete(QString url);
+    void fetchVideoMetaDataComplete(QString videoTitle);
 };
 
 #endif // HTTPINPUTSOURCE_H

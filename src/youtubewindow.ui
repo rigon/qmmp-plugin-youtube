@@ -75,9 +75,9 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="buttonPreferences">
+      <widget class="QPushButton" name="buttonSearchRelated">
        <property name="text">
-        <string>Preferences</string>
+        <string>Search Related</string>
        </property>
       </widget>
      </item>
@@ -88,6 +88,26 @@
        </property>
        <property name="indent">
         <number>-13</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonPreferences">
+       <property name="text">
+        <string>Preferences</string>
        </property>
       </widget>
      </item>

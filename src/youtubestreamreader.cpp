@@ -375,7 +375,6 @@ void HttpStreamReader::checkBuffer()
     if (m_stream.buf_fill > m_buffer_size && !m_ready)
     {
         m_ready  = true;
-        qDebug("HttpStreamReader: ready");
         if(!m_meta_sent)
         {
             QMap<Qmmp::MetaData, QString> metaData;
@@ -385,7 +384,7 @@ void HttpStreamReader::checkBuffer()
                 metaData.insert(Qmmp::GENRE, m_stream.header.value("icy-genre"));
             }
             metaData.insert(Qmmp::URL, m_url);
-            m_parent->addMetaData(metaData);
+            //m_parent->addMetaData(metaData);
             sendStreamInfo(m_codec);
         }
         emit ready();
@@ -474,7 +473,7 @@ void HttpStreamReader::parseICYMetaData(char *data, qint64 size)
                 metaData.insert(Qmmp::TITLE, codec->toUnicode(m_stream.header.value("icy-name")));
             metaData.insert(Qmmp::GENRE, codec->toUnicode(m_stream.header.value("icy-genre")));
             metaData.insert(Qmmp::URL, m_url);
-            m_parent->addMetaData(metaData);
+            //m_parent->addMetaData(metaData);
             sendStreamInfo(codec);
             m_meta_sent = true;
             break;
