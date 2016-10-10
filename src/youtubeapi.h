@@ -18,43 +18,47 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef YOUTUBEWINDOW_H
-#define YOUTUBEWINDOW_H
+#ifndef YOUTUBEAPI_H
+#define YOUTUBEAPI_H
 
-#include <QDialog>
-#include <QWidget>
+#include <QObject>
 #include <QString>
-#include <QStringList>
-#include <QKeyEvent>
+#include <QMetaMethod>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
 #include <QJsonObject>
 
-#include "youtubevideostreams.h"
-#include "ui_youtubewindow.h"
 
-namespace Ui {
-    class YoutubeWindow;
-}
+#define YOUTUBE_API(resource)   "https://www.googleapis.com/youtube/v3/" # resource
+#define YOUTUBE_API_SEARCH      YOUTUBE_API(search)
+#define YOUTUBE_API_VIDEOS      YOUTUBE_API(videos)
 
-class YoutubeWindow : public QDialog
+
+class YoutubeAPI : public QObject
 {
     Q_OBJECT
 
 private:
-    Ui::YoutubeWindow *ui;
-
-    QStringList selectedTrackInfo;
+    QNetworkAccessManager *networkManager;
+    void runRequest(const char *url, QUrlQuery &urlQuery, void (YoutubeAPI::*method)(QNetworkReply *));
 
 public:
-    YoutubeWindow(QWidget *parent = 0);
-    ~YoutubeWindow();
+    explicit YoutubeAPI(QObject *parent = 0);
+    ~YoutubeAPI();
+
+public slots:
+    void searchList(QString queryTerm);
+    void searchRelated(QString id);
+    void videosList(QString id);
 
 private slots:
-    void on_buttonSearch_clicked();
-    void on_buttonPreferences_clicked();
-    void on_buttonAdd_clicked();
+    void replySearchList(QNetworkReply *reply);
+    void replyVideosList(QNetworkReply *reply);
 
-    void processSearch(QJsonObject *result);
-    void on_buttonSearchRelated_clicked();
+signals:
+    void resultsAvailable(QJsonObject *result);
+    void resultsVideosListAvailable(QString result);
+
 };
 
-#endif // YOUTUBEWINDOW_H
+#endif // YOUTUBEAPI_H
