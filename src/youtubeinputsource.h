@@ -48,7 +48,7 @@ private:
 
 private slots:
     void fetchStreamURLComplete(QString url);
-    void fetchVideoMetaDataComplete(QString videoTitle);
+    void fetchVideoMetaDataComplete(QHash<QString, QString> videoData);
 };
 
 #endif // HTTPINPUTSOURCE_H

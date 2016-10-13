@@ -18,6 +18,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
+#include <QMap>
+#include <QHash>
 #include <QUrl>
 #include <QUrlQuery>
 #include <QJsonParseError>
@@ -25,11 +27,10 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QString>
 
 #include "youtubeapi.h"
 
-#include <iostream>
-#include <typeinfo>
 
 YoutubeAPI::YoutubeAPI(QObject *parent) : QObject(parent)
 {
@@ -50,9 +51,9 @@ void YoutubeAPI::runRequest(const char *url, QUrlQuery &urlQuery, void (YoutubeA
     QNetworkRequest request;
     request.setUrl(urlBuilder);
     //request.setRawHeader("Host", "content.googleapis.com");
-    //request.setRawHeader("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:35.0) Gecko/20100101 Firefox/35.0");
-    //request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-    //request.setRawHeader("Accept-Language", "en-US,en;q=0.5");
+    request.setRawHeader("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:35.0) Gecko/20100101 Firefox/35.0");
+    request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+    request.setRawHeader("Accept-Language", "en-US,en;q=0.5");
     //request.setRawHeader("Accept-Encoding", "gzip, deflate");
     //request.setRawHeader("X-JavaScript-User-Agent", "google-api-javascript-client/1.1.0-beta");
     //request.setRawHeader("X-ClientDetails", "appVersion=5.0%20(X11)&platform=Linux%20x86_64&userAgent=Mozilla%2F5.0%20(X11%3B%20Linux%20x86_64%3B%20rv%3A35.0)%20Gecko%2F20100101%20Firefox%2F35.0");
@@ -87,12 +88,11 @@ void YoutubeAPI::searchRelated(QString id)
     QUrlQuery urlQuery;
     urlQuery.addQueryItem("part", "snippet");
     urlQuery.addQueryItem("type", "video");
-    urlQuery.addQueryItem("maxResults", "15");
+    urlQuery.addQueryItem("maxResults", "30");
     urlQuery.addQueryItem("relatedToVideoId", id);
 
     // Run the request
     this->runRequest(YOUTUBE_API_SEARCH, urlQuery, &YoutubeAPI::replySearchList);
-
 }
 
 void YoutubeAPI::videosList(QString id)
@@ -121,7 +121,7 @@ void YoutubeAPI::replySearchList(QNetworkReply *reply)
     QJsonObject result = QJsonDocument::fromJson(response, &e).object();
 
     // Emits a signal with results
-    emit resultsAvailable(&result);
+    emit searchListAvailable(&result);
 }
 
 void YoutubeAPI::replyVideosList(QNetworkReply *reply)
@@ -149,8 +149,15 @@ void YoutubeAPI::replyVideosList(QNetworkReply *reply)
         QString channel = snippet["channelTitle"].toString();
         QString thumbnail = snippet["thumbnails"].toMap()["high"].toMap()["url"].toString();
 
+        QHash<QString, QString> data;
+        data.insert("video-id", id);
+        data.insert("video-title", title);
+        data.insert("video-description", description);
+        data.insert("video-channel", channel);
+        data.insert("video-thumbnail", thumbnail);
+
         // Emits a signal with results
-        emit resultsVideosListAvailable(title);
+        emit videosListAvailable(data);
     }
 }
 

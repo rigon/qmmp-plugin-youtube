@@ -16,7 +16,6 @@ unix:LIBS += -lqmmp -lqmmpui -lqjson -lPythonQt -lpython3 -lcurl
 
 SOURCES += src/youtubewindow.cpp \
     src/youtubepreferences.cpp \
-    src/youtubesearch.cpp \
     src/youtubevideostreams.cpp \
     src/youtubedl.cpp \
     src/youtubefactory.cpp \
@@ -26,7 +25,6 @@ SOURCES += src/youtubewindow.cpp \
 
 HEADERS += src/youtubewindow.h \
     src/youtubepreferences.h \
-    src/youtubesearch.h \
     src/youtubevideostreams.h \
     src/youtubedl.h \
     src/youtubefactory.h \

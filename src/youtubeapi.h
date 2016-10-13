@@ -56,8 +56,8 @@ private slots:
     void replyVideosList(QNetworkReply *reply);
 
 signals:
-    void resultsAvailable(QJsonObject *result);
-    void resultsVideosListAvailable(QString result);
+    void searchListAvailable(QJsonObject *result);
+    void videosListAvailable(QHash<QString, QString> data);
 
 };
 
