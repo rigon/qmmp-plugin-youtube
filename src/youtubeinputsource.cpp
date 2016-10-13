@@ -18,8 +18,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include <iostream>
-#include <unistd.h>
+#include <QHash>
+#include <QString>
 
 #include "youtubestreamreader.h"
 #include "youtubeinputsource.h"
@@ -32,8 +32,6 @@ static YoutubeDL *youtubeVideoStreams = NULL;
 YoutubeInputSource::YoutubeInputSource(const QString &url, QObject *parent) : InputSource(url, parent)
 {
     this->videoID = url.mid(tr("youtube://").length());
-
-
 }
 
 void YoutubeInputSource::fetchStreamURLComplete(QString url)
@@ -44,23 +42,23 @@ void YoutubeInputSource::fetchStreamURLComplete(QString url)
     m_reader->downloadFile();
 
     YoutubeAPI *youtubeAPI = new YoutubeAPI();
-    connect(youtubeAPI, &YoutubeAPI::resultsVideosListAvailable, this, &YoutubeInputSource::fetchVideoMetaDataComplete);
+    connect(youtubeAPI, &YoutubeAPI::videosListAvailable, this, &YoutubeInputSource::fetchVideoMetaDataComplete);
     youtubeAPI->videosList(this->videoID);
-
-    std::cout << "HERE HE GOES!!\n";
 }
 
-void YoutubeInputSource::fetchVideoMetaDataComplete(QString videoTitle)
+void YoutubeInputSource::fetchVideoMetaDataComplete(QHash<QString, QString> videoData)
 {
-    std::cout << "THERE IT IS GOES!!\n";
-
+    QString videoTitle = videoData.value("video-title");
     QString artist = videoTitle.left(videoTitle.indexOf('-')).trimmed();
     QString title = videoTitle.mid(videoTitle.indexOf('-') + 1).trimmed();
     QMap<Qmmp::MetaData, QString> metaData;
-    metaData.insert(Qmmp::TITLE, artist);
-    metaData.insert(Qmmp::ARTIST, title);
+    metaData.insert(Qmmp::TITLE, title);
+    metaData.insert(Qmmp::ARTIST, artist);
     metaData.insert(Qmmp::URL, this->url());
     this->addMetaData(metaData);
+
+    QHash<QString, QString> streamInfo = this->takeStreamInfo();
+    this->addStreamInfo(streamInfo.unite(videoData));
 }
 
 QIODevice *YoutubeInputSource::ioDevice()

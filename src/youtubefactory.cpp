@@ -22,7 +22,6 @@
 #include <QMessageBox>
 #include <QTranslator>
 
-#include <iostream>
 #include <qmmpui/uihelper.h>
 
 #include "youtubefactory.h"

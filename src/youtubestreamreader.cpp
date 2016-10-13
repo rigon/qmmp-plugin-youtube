@@ -24,10 +24,12 @@
 #include <QTextCodec>
 #include <stdint.h>
 #include <stdlib.h>
+
 #include <qmmp/qmmpsettings.h>
 #include <qmmp/qmmp.h>
 #include <qmmp/statehandler.h>
 #include <qmmp/inputsource.h>
+
 #include "youtubeinputsource.h"
 #include "youtubestreamreader.h"
 

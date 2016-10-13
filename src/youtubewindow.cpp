@@ -52,6 +52,7 @@ YoutubeWindow::YoutubeWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     setWindowFlags(Qt::Window | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
+    setModal(false);
     //setAttribute(Qt::WA_DeleteOnClose);
 
     //ui->buttonPreferences->setVisible(false);   // TODO: Remove this line
@@ -74,7 +75,7 @@ void YoutubeWindow::on_buttonSearch_clicked()
     QString search(ui->textSearch->text());
 
     YoutubeAPI *youtubeAPI = new YoutubeAPI();
-    connect(youtubeAPI, &YoutubeAPI::resultsAvailable, this, &YoutubeWindow::processSearch);
+    connect(youtubeAPI, &YoutubeAPI::searchListAvailable, this, &YoutubeWindow::processSearch);
     youtubeAPI->searchList(search);
 }
 
@@ -104,7 +105,7 @@ void YoutubeWindow::on_buttonSearchRelated_clicked()
     ui->labelState->setText("Searching...");
 
     YoutubeAPI *youtubeAPI = new YoutubeAPI();
-    connect(youtubeAPI, &YoutubeAPI::resultsAvailable, this, &YoutubeWindow::processSearch);
+    connect(youtubeAPI, &YoutubeAPI::searchListAvailable, this, &YoutubeWindow::processSearch);
     youtubeAPI->searchRelated(videoID);
 }
 
