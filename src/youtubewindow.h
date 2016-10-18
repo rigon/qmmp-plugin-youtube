@@ -50,11 +50,14 @@ public:
 
 private slots:
     void on_buttonSearch_clicked();
-    void on_buttonPreferences_clicked();
+    void on_buttonSearchRelated_clicked();
     void on_buttonAdd_clicked();
+    void on_buttonPreferences_clicked();
 
     void processSearch(QJsonObject *result);
-    void on_buttonSearchRelated_clicked();
+
+public slots:
+    void searchFor(QString videoTitle);
 };
 
 #endif // YOUTUBEWINDOW_H

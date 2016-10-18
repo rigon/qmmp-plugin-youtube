@@ -21,7 +21,8 @@ SOURCES += src/youtubewindow.cpp \
     src/youtubefactory.cpp \
     src/youtubeinputsource.cpp \
     src/youtubestreamreader.cpp \
-    src/youtubeapi.cpp
+    src/youtubeapi.cpp \
+    src/qurlimage.cpp
 
 HEADERS += src/youtubewindow.h \
     src/youtubepreferences.h \
@@ -30,7 +31,8 @@ HEADERS += src/youtubewindow.h \
     src/youtubefactory.h \
     src/youtubeinputsource.h \
     src/youtubestreamreader.h \
-    src/youtubeapi.h
+    src/youtubeapi.h \
+    src/qurlimage.h
 
 FORMS += src/youtubewindow.ui \
     src/youtubepreferences.ui
