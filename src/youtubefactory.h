@@ -24,6 +24,7 @@
 #include <QObject>
 #include <QAction>
 #include <QStringList>
+#include <QIcon>
 
 #include <qmmp/inputsourcefactory.h>
 
@@ -41,7 +42,8 @@ Q_PLUGIN_METADATA(IID "org.qmmp.qmmp.InputSourceFactoryInterface.1.0")
 Q_INTERFACES(InputSourceFactory)
 
 private:
-    QAction *m_action;
+    QAction *m_action_tools;
+    QAction *m_action_playlist;
     YoutubeWindow *m_youtubeWindow = NULL;
 
 public:
@@ -55,7 +57,9 @@ public:
     QTranslator *createTranslator(QObject *parent);
 
 private slots:
-    void showYoutubeWindow();
+    void showSearchWindow();
+    void showRelated();
+    void setFavicon(QIcon *icon);
 };
 
 #endif // YOUTUBEFACTORY_H

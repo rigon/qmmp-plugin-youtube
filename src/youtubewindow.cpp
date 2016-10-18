@@ -22,7 +22,12 @@
 #include <iostream>
 
 #include <QMessageBox>
-#include <QWidgetItem>
+#include <QListWidget>
+#include <QListWidgetItem>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QIcon>
 #include <QDialog>
 #include <QWidget>
 #include <QKeyEvent>
@@ -36,6 +41,7 @@
 #include <qmmp/fileinfo.h>
 #include <qmmpui/playlistmanager.h>
 
+#include "qurlimage.h"
 #include "youtubedl.h"
 #include "youtubewindow.h"
 #include "youtubeapi.h"
@@ -46,19 +52,12 @@
 static time_t searchTime = 0;
 
 
-YoutubeWindow::YoutubeWindow(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::YoutubeWindow)
+YoutubeWindow::YoutubeWindow(QWidget *parent): QDialog(parent), ui(new Ui::YoutubeWindow)
 {
     ui->setupUi(this);
     setWindowFlags(Qt::Window | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
     setModal(false);
     //setAttribute(Qt::WA_DeleteOnClose);
-
-    //ui->buttonPreferences->setVisible(false);   // TODO: Remove this line
-
-    // Search on open
-    this->on_buttonSearch_clicked();
 }
 
 void YoutubeWindow::on_buttonSearch_clicked()
@@ -135,12 +134,24 @@ void YoutubeWindow::processSearch(QJsonObject *result)
         info.append(channel);
         info.append(thumbnail);
 
-        QListWidgetItem *widgetItem = new QListWidgetItem(title, ui->listResults);
-        widgetItem->setData(Qt::UserRole, info);
-        ui->listResults->addItem(widgetItem);
+        // Item to add to the list
+        QListWidgetItem *listItem = new QListWidgetItem(title, ui->listResults);
+        listItem->setData(Qt::UserRole, info);
+        //// Load the thumbnail: TODO locks the program
+        //QUrlImage *imageThumbnail = new QUrlImage(thumbnail);
+        //listItem->setIcon(*(imageThumbnail->getIcon()));
+
+        ui->listResults->addItem(listItem);
     }
 
     ui->labelState->setText("");
+}
+
+void YoutubeWindow::searchFor(QString videoTitle)
+{
+    ui->textSearch->setText(videoTitle);
+    ui->listResults->clear();
+    this->on_buttonSearch_clicked();
 }
 
 void YoutubeWindow::on_buttonAdd_clicked()

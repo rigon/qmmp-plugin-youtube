@@ -28,6 +28,9 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QString>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
 
 #include "youtubeapi.h"
 
@@ -65,7 +68,7 @@ void YoutubeAPI::runRequest(const char *url, QUrlQuery &urlQuery, void (YoutubeA
     //request.setRawHeader("If-None-Match", "\"F9iA7pnxqNgrkOutjQAa9F2k8HY/H_EGcd-W0Fs1wftFDb5-3dmNY0Q\"");
 
     QNetworkAccessManager *networkManager = new QNetworkAccessManager();
-    this->connect(networkManager, &QNetworkAccessManager::finished, this, method);
+    connect(networkManager, &QNetworkAccessManager::finished, this, method);
     networkManager->get(request);       // GET method
 }
 
@@ -147,7 +150,7 @@ void YoutubeAPI::replyVideosList(QNetworkReply *reply)
         QString title = snippet["title"].toString();
         QString description = snippet["description"].toString();
         QString channel = snippet["channelTitle"].toString();
-        QString thumbnail = snippet["thumbnails"].toMap()["high"].toMap()["url"].toString();
+        QString thumbnail = snippet["thumbnails"].toMap()["low"].toMap()["url"].toString();
 
         QHash<QString, QString> data;
         data.insert("video-id", id);
