@@ -44,6 +44,7 @@ Q_INTERFACES(InputSourceFactory)
 private:
     QAction *m_action_tools;
     QAction *m_action_playlist;
+    QAction *m_action_openbrowser;
     YoutubeWindow *m_youtubeWindow = NULL;
 
 public:
@@ -59,6 +60,7 @@ public:
 private slots:
     void showSearchWindow();
     void showRelated();
+    void openInBrowser();
     void setFavicon(QIcon *icon);
 };
 

@@ -22,6 +22,7 @@
 #include <QMessageBox>
 #include <QTranslator>
 #include <QList>
+#include <QDesktopServices>
 
 #include <qmmpui/uihelper.h>
 #include <qmmpui/mediaplayer.h>
@@ -47,10 +48,16 @@ YoutubeFactory::YoutubeFactory(QObject *parent) : QObject(parent)
     connect(m_action_tools, &QAction::triggered, this, &YoutubeFactory::showSearchWindow);
 
     // Show related videos from the playlist context menu
-    m_action_playlist = new QAction(tr("Search on YouTube"), this);
+    m_action_playlist = new QAction(tr("Search track"), this);
     m_action_playlist->setShortcut(tr("Meta+Y"));
     UiHelper::instance()->addAction(m_action_playlist, UiHelper::PLAYLIST_MENU);
     connect (m_action_playlist, &QAction::triggered, this, &YoutubeFactory::showRelated);
+
+    // Open video in the browser from the playlist context menu
+    m_action_openbrowser = new QAction(tr("Open in browser"), this);
+    m_action_openbrowser->setIcon(QIcon::fromTheme("applications-internet"));
+    UiHelper::instance()->addAction(m_action_openbrowser, UiHelper::PLAYLIST_MENU);
+    connect (m_action_openbrowser, &QAction::triggered, this, &YoutubeFactory::openInBrowser);
 
     // Youtube Icon
     QUrlImage *favicon = new QUrlImage();
@@ -121,6 +128,26 @@ void YoutubeFactory::showRelated()
         m_youtubeWindow->show();
         m_youtubeWindow->activateWindow();
         m_youtubeWindow->searchFor(videoTitle);
+    }
+}
+
+void YoutubeFactory::openInBrowser()
+{
+    // List of selected tracks
+    PlayListManager *pl_manager = MediaPlayer::instance()->playListManager();
+    QList <PlayListTrack *> tracks = pl_manager->selectedPlayList()->selectedTracks();
+
+    // If at least a track is selected
+    if (!tracks.isEmpty()) {
+        // First track selected
+        QString url(tracks.at(0)->value(Qmmp::URL));
+
+        if(url.startsWith("youtube://")) {
+            QString videoID(url.mid(tr("youtube://").length()));
+            QDesktopServices::openUrl(QUrl("https://www.youtube.com/watch?v=" + videoID));
+        }
+        else
+            QMessageBox::about(NULL, tr("YouTube Plugin"), tr("The selected track is not a YouTube video!"));
     }
 }
 
