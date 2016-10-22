@@ -18,30 +18,36 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef YOUTUBEDL_H
-#define YOUTUBEDL_H
+#ifndef YOUTUBEUI_H
+#define YOUTUBEUI_H
 
-#include <QString>
-#include <QThread>
-#include <PythonQt/PythonQt.h>
+#include <QObject>
+#include <QAction>
+#include <QIcon>
 
-#include "youtubevideostreams.h"
+#include "youtubewindow.h"
 
-class YoutubeDL : public YoutubeVideoStreams, public QThread
+class YoutubeUI : public QObject
 {
+    Q_OBJECT
 
 private:
-    PythonQtObjectPtr context;
-    void initialize();
-
-protected:
-    void run();
+    QAction *m_action_tools;
+    QAction *m_action_playlist;
+    QAction *m_action_openbrowser;
+    YoutubeWindow *m_youtubeWindow = NULL;
 
 public:
-    YoutubeDL();
-    void fetchStreams(QString videoId);
-    QString runSynchronized(QString videoID);
+    YoutubeUI(QObject *parent = 0);
+
+public slots:
+    void showSearchWindow();
+    void showRelated();
+    void openInBrowser();
+    void setFavicon(QIcon *icon);
+
+signals:
+
 };
 
-
-#endif // YOUTUBEDL_H
+#endif // YOUTUBEUI_H

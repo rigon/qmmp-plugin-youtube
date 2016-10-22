@@ -30,13 +30,12 @@
 #include <qmmpui/playlisttrack.h>
 
 #include "qurlimage.h"
-#include "youtubefactory.h"
+#include "youtubeuifactory.h"
 #include "youtubepreferences.h"
-#include "youtubeinputsource.h"
 #include "youtubewindow.h"
+#include "youtubeui.h"
 
-
-YoutubeFactory::YoutubeFactory(QObject *parent) : QObject(parent)
+YoutubeUI::YoutubeUI(QObject *parent) : QObject(parent)
 {
     // Create Youtube Window
     m_youtubeWindow = new YoutubeWindow();
@@ -45,27 +44,27 @@ YoutubeFactory::YoutubeFactory(QObject *parent) : QObject(parent)
     m_action_tools = new QAction(tr("YouTube"), this);
     m_action_tools->setShortcut(tr("Ctrl+Y"));
     UiHelper::instance()->addAction(m_action_tools, UiHelper::TOOLS_MENU);
-    connect(m_action_tools, &QAction::triggered, this, &YoutubeFactory::showSearchWindow);
+    connect(m_action_tools, &QAction::triggered, this, &YoutubeUI::showSearchWindow);
 
     // Show related videos from the playlist context menu
     m_action_playlist = new QAction(tr("Search track"), this);
     m_action_playlist->setShortcut(tr("Meta+Y"));
     UiHelper::instance()->addAction(m_action_playlist, UiHelper::PLAYLIST_MENU);
-    connect (m_action_playlist, &QAction::triggered, this, &YoutubeFactory::showRelated);
+    connect (m_action_playlist, &QAction::triggered, this, &YoutubeUI::showRelated);
 
     // Open video in the browser from the playlist context menu
     m_action_openbrowser = new QAction(tr("Open in browser"), this);
     m_action_openbrowser->setIcon(QIcon::fromTheme("applications-internet"));
     UiHelper::instance()->addAction(m_action_openbrowser, UiHelper::PLAYLIST_MENU);
-    connect (m_action_openbrowser, &QAction::triggered, this, &YoutubeFactory::openInBrowser);
+    connect (m_action_openbrowser, &QAction::triggered, this, &YoutubeUI::openInBrowser);
 
     // Youtube Icon
     QUrlImage *favicon = new QUrlImage();
-    connect(favicon, &QUrlImage::finishedIcon, this, &YoutubeFactory::setFavicon);
+    connect(favicon, &QUrlImage::finishedIcon, this, &YoutubeUI::setFavicon);
     favicon->fetchUrl("https://www.youtube.com/favicon.ico");
 }
 
-void YoutubeFactory::setFavicon(QIcon *icon)
+void YoutubeUI::setFavicon(QIcon *icon)
 {
     m_youtubeWindow->setWindowIcon(*icon);
     m_action_tools->setIcon(*icon);
@@ -73,38 +72,8 @@ void YoutubeFactory::setFavicon(QIcon *icon)
     delete icon;
 }
 
-const InputSourceProperties YoutubeFactory::properties() const
-{
-    InputSourceProperties p;
-    p.protocols << "youtube";
-    p.name = tr("YouTube Plugin");
-    p.shortName = "youtube";
-    p.hasAbout = true;
-    p.hasSettings = true;     // TODO: Change to true
-    //p.visibilityControl = false;
-    return p;
-}
 
-InputSource *YoutubeFactory::create(const QString &url, QObject *parent)
-{
-    return new YoutubeInputSource(url, parent);
-}
-
-void YoutubeFactory::showSettings(QWidget *parent)
-{
-    YoutubePreferences *preferences = new YoutubePreferences(parent);
-    preferences->show();
-}
-
-void YoutubeFactory::showAbout(QWidget *parent)
-{
-    QMessageBox::about(parent, tr("About YouTube Plugin"),
-                        tr("Qmmp YouTube Plugin")+"\n"+
-                        tr("This plugin allows to play musics directly from YouTube videos")+"\n"+
-                        tr("Written by: Ricardo Gonçalves <ricardompgoncalves@gmail.com>"));
-}
-
-void YoutubeFactory::showSearchWindow()
+void YoutubeUI::showSearchWindow()
 {
     static bool firstTime = true;
 
@@ -114,7 +83,7 @@ void YoutubeFactory::showSearchWindow()
     firstTime = false;
 }
 
-void YoutubeFactory::showRelated()
+void YoutubeUI::showRelated()
 {
     // List of selected tracks
     PlayListManager *pl_manager = MediaPlayer::instance()->playListManager();
@@ -131,7 +100,7 @@ void YoutubeFactory::showRelated()
     }
 }
 
-void YoutubeFactory::openInBrowser()
+void YoutubeUI::openInBrowser()
 {
     // List of selected tracks
     PlayListManager *pl_manager = MediaPlayer::instance()->playListManager();
@@ -149,12 +118,4 @@ void YoutubeFactory::openInBrowser()
         else
             QMessageBox::about(NULL, tr("YouTube Plugin"), tr("The selected track is not a YouTube video!"));
     }
-}
-
-QTranslator *YoutubeFactory::createTranslator(QObject *parent)
-{
-    QTranslator *translator = new QTranslator(parent);
-    QString locale = Qmmp::systemLanguageID();
-    translator->load(QString(":/youtube_plugin_") + locale);
-    return translator;
 }

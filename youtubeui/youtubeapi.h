@@ -18,50 +18,47 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef YOUTUBEFACTORY_H
-#define YOUTUBEFACTORY_H
+#ifndef YOUTUBEAPI_H
+#define YOUTUBEAPI_H
 
 #include <QObject>
-#include <QAction>
-#include <QStringList>
-#include <QIcon>
+#include <QString>
+#include <QMetaMethod>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QJsonObject>
 
-#include <qmmp/inputsourcefactory.h>
 
-#include "youtubewindow.h"
+#define YOUTUBE_API(resource)   "https://www.googleapis.com/youtube/v3/" # resource
+#define YOUTUBE_API_SEARCH      YOUTUBE_API(search)
+#define YOUTUBE_API_VIDEOS      YOUTUBE_API(videos)
 
-class QTranslator;
 
-/**
- * @author Ricardo Gonçalves <ricardompgoncalves@gmail.com>
- */
-class YoutubeFactory : public QObject, InputSourceFactory
+class YoutubeAPI : public QObject
 {
-Q_OBJECT
-Q_PLUGIN_METADATA(IID "org.qmmp.qmmp.InputSourceFactoryInterface.1.0")
-Q_INTERFACES(InputSourceFactory)
+    Q_OBJECT
 
 private:
-    QAction *m_action_tools;
-    QAction *m_action_playlist;
-    QAction *m_action_openbrowser;
-    YoutubeWindow *m_youtubeWindow = NULL;
+    QNetworkAccessManager *networkManager;
+    void runRequest(const char *url, QUrlQuery &urlQuery, void (YoutubeAPI::*method)(QNetworkReply *));
 
 public:
-    YoutubeFactory(QObject *parent = 0);
+    explicit YoutubeAPI(QObject *parent = 0);
+    ~YoutubeAPI();
 
-    const InputSourceProperties properties() const;
-    InputSource *create(const QString &url, QObject *parent = 0);
-
-    void showSettings(QWidget *parent);
-    void showAbout(QWidget *parent);
-    QTranslator *createTranslator(QObject *parent);
+public slots:
+    void searchList(QString queryTerm);
+    void searchRelated(QString id);
+    void videosList(QString id);
 
 private slots:
-    void showSearchWindow();
-    void showRelated();
-    void openInBrowser();
-    void setFavicon(QIcon *icon);
+    void replySearchList(QNetworkReply *reply);
+    void replyVideosList(QNetworkReply *reply);
+
+signals:
+    void searchListAvailable(QJsonObject *result);
+    void videosListAvailable(QHash<QString, QString> data);
+
 };
 
-#endif // YOUTUBEFACTORY_H
+#endif // YOUTUBEAPI_H

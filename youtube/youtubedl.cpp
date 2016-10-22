@@ -53,28 +53,7 @@ static QString script =
     "    \n"
     "    return beststream['url']\n";
 
-/*
-static QString script2 =
-    "import sys\n"
-    "sys.path.append('/usr/lib/python3.5/site-packages')\n"
-    "from youtube_dl import YoutubeDL\n"
-    "\n"
-    "def get_stream(id):\n"
-    "    print id\n"
-    "    return id\n";
-
-//    QMessageBox::information(NULL, "Restul", result.toString());
-//    QList<QVariant> list = result.toList();
-//    foreach(QVariant s, list)
-//        QMessageBox::information(NULL, "Result", s.toString());
-*/
-
 YoutubeDL::YoutubeDL()
-{
-    this->initialize();
-}
-
-void YoutubeDL::initialize()
 {
     std::cout << ">> Init Python..." << std::endl;
 
@@ -88,23 +67,19 @@ void YoutubeDL::initialize()
     context.evalScript(script);
 }
 
-void YoutubeDL::fetchStreams(QString videoId) {
-    this->videoId = videoId;
+YoutubeDL::~YoutubeDL()
+{
 
-    // Start the thread to run the script
-//    this->start();
-    this->run();
 }
 
-
-void YoutubeDL::run()
+void YoutubeDL::fetchStreams(QString videoId)
 {
     // Call Pyhthon Script to determine the URL
     // Arguments to pass
     QVariantList args;
-    args << this->videoId;
+    args << videoId;
 
-    std::cout << ">> Running the Python script for VideoID " << this->videoId.toStdString() << "..." << std::endl;
+    std::cout << ">> Running the Python script for VideoID " << videoId.toStdString() << "..." << std::endl;
 
     // Run the script
     QVariant result = context.call("get_stream", args);
@@ -114,11 +89,4 @@ void YoutubeDL::run()
 
     // Emits a signal
     emit streamURLAvailable(streamURL);
-
-
-    // Process results
-    Stream streamObj(0, "audio/m4a", streamURL);
-    this->streamsAudio.append(streamObj);
-    // Emits a signal
-    emit streamsAvailable(this);
 }

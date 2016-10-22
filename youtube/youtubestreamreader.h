@@ -17,8 +17,8 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
-#ifndef HTTPSTREAMREADER_H
-#define HTTPSTREAMREADER_H
+#ifndef YoutubeStreamReader_H
+#define YoutubeStreamReader_H
 
 #include <QObject>
 #include <QIODevice>
@@ -54,13 +54,13 @@ struct HttpStreamData
 /*! @internal
  *   @author Ilya Kotov <forkotov02@hotmail.ru>
  */
-class HttpStreamReader : public QIODevice
+class YoutubeStreamReader : public QIODevice
 {
     Q_OBJECT
 public:
-    HttpStreamReader(const QString &url, YoutubeInputSource *parent);
+    YoutubeStreamReader(const QString &url, YoutubeInputSource *parent);
 
-    virtual ~HttpStreamReader();
+    virtual ~YoutubeStreamReader();
 
     /**
      *  QIODevice API
@@ -119,12 +119,12 @@ class DownloadThread : public QThread
 {
     Q_OBJECT
 public:
-    DownloadThread(HttpStreamReader *parent);
+    DownloadThread(YoutubeStreamReader *parent);
     virtual ~DownloadThread ();
 
 private:
     virtual void run();
-    HttpStreamReader *m_parent;
+    YoutubeStreamReader *m_parent;
 };
 
 #endif

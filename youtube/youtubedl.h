@@ -18,37 +18,29 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef HTTPINPUTSOURCE_H
-#define HTTPINPUTSOURCE_H
+#ifndef YOUTUBEDL_H
+#define YOUTUBEDL_H
 
-#include <qmmp/inputsource.h>
+#include <QString>
+#include <QObject>
+#include <PythonQt/PythonQt.h>
 
-#include "youtubedl.h"
-
-class HttpStreamReader;
-
-/**
- *   @author Ricardo Gonçalves <ricardompgoncalves@gmail.com>
- */
-class YoutubeInputSource : public InputSource
+class YoutubeDL : public QObject
 {
-Q_OBJECT
-public:
-    YoutubeInputSource(const QString &url, QObject *parent = 0);
-
-    QIODevice *ioDevice();
-    bool initialize();
-    bool isReady();
-    bool isWaiting();
-    QString contentType() const;
+    Q_OBJECT
 
 private:
-    HttpStreamReader *m_reader = NULL;
-    QString videoID;
+    PythonQtObjectPtr context;
 
-private slots:
-    void fetchStreamURLComplete(QString url);
-    void fetchVideoMetaDataComplete(QHash<QString, QString> videoData);
+public:
+    YoutubeDL();
+    ~YoutubeDL();
+
+public slots:
+    void fetchStreams(QString videoId);
+
+signals:
+    void streamURLAvailable(QString url);
 };
 
-#endif // HTTPINPUTSOURCE_H
+#endif // YOUTUBEDL_H

@@ -36,7 +36,7 @@ YoutubeInputSource::YoutubeInputSource(const QString &url, QObject *parent) : In
 
 void YoutubeInputSource::fetchStreamURLComplete(QString url)
 {
-    m_reader = new HttpStreamReader(url, this);
+    m_reader = new YoutubeStreamReader(url, this);
     connect(m_reader, SIGNAL(ready()), SIGNAL(ready()));
     connect(m_reader, SIGNAL(error()), SIGNAL(error()));
     m_reader->downloadFile();

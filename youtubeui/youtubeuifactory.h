@@ -18,46 +18,39 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef YOUTUBEWINDOW_H
-#define YOUTUBEWINDOW_H
+#ifndef YOUTUBEUIFACTORY_H
+#define YOUTUBEUIFACTORY_H
 
-#include <QDialog>
+#include <QObject>
+#include <QAction>
 #include <QWidget>
-#include <QString>
 #include <QStringList>
-#include <QKeyEvent>
-#include <QJsonObject>
+#include <QIcon>
 
-#include "youtubevideostreams.h"
-#include "ui_youtubewindow.h"
+#include <qmmpui/general.h>
+#include <qmmpui/generalfactory.h>
 
-namespace Ui {
-    class YoutubeWindow;
-}
+#include "youtubewindow.h"
 
-class YoutubeWindow : public QDialog
+class QTranslator;
+
+/**
+ * @author Ricardo Gonçalves <ricardompgoncalves@gmail.com>
+ */
+class YoutubeUIFactory : public QObject, public GeneralFactory
 {
-    Q_OBJECT
-
-private:
-    Ui::YoutubeWindow *ui;
-
-    QStringList selectedTrackInfo;
+Q_OBJECT
+Q_PLUGIN_METADATA(IID "org.qmmp.qmmpui.GeneralFactoryInterface.1.0")
+Q_INTERFACES(GeneralFactory)
 
 public:
-    YoutubeWindow(QWidget *parent = 0);
-    ~YoutubeWindow();
+    YoutubeUIFactory(QObject *parent = 0);
 
-private slots:
-    void on_buttonSearch_clicked();
-    void on_buttonSearchRelated_clicked();
-    void on_buttonAdd_clicked();
-    void on_buttonPreferences_clicked();
-
-    void processSearch(QJsonObject *result);
-
-public slots:
-    void searchFor(QString videoTitle);
+    const GeneralProperties properties() const;
+    QObject *create(QObject *parent);
+    QDialog *createConfigDialog(QWidget *parent);
+    void showAbout(QWidget *parent);
+    QTranslator *createTranslator(QObject *parent);
 };
 
-#endif // YOUTUBEWINDOW_H
+#endif // YOUTUBEUIFACTORY_H
