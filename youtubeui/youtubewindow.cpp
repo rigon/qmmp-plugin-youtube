@@ -42,10 +42,8 @@
 #include <qmmpui/playlistmanager.h>
 
 #include "qurlimage.h"
-#include "youtubedl.h"
 #include "youtubewindow.h"
 #include "youtubeapi.h"
-#include "youtubevideostreams.h"
 #include "youtubepreferences.h"
 
 

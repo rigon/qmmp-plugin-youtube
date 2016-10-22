@@ -18,75 +18,45 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef YOUTUBEVIDEOSTREAMS_H
-#define YOUTUBEVIDEOSTREAMS_H
+#ifndef YOUTUBEWINDOW_H
+#define YOUTUBEWINDOW_H
 
-#include <QObject>
-#include <QList>
+#include <QDialog>
+#include <QWidget>
 #include <QString>
-#include <QNetworkAccessManager>
+#include <QStringList>
+#include <QKeyEvent>
+#include <QJsonObject>
 
+#include "ui_youtubewindow.h"
 
-class YoutubeVideoStreams : public QObject
+namespace Ui {
+    class YoutubeWindow;
+}
+
+class YoutubeWindow : public QDialog
 {
     Q_OBJECT
 
-public:
-    class Stream {
-    private:
-        int ranking;
-        QString type;
-        QString url;
-    public:
-        Stream() {}
-        Stream(int ranking, QString type, QString url) {
-            this->ranking = ranking; this->type = type; this->url = url;
-        }
+private:
+    Ui::YoutubeWindow *ui;
 
-        int getRanking() { return this->ranking; }
-        QString getType() { return this->type; }
-        QString getUrl() { return this->url; }
-    };
-
-protected:
-    QNetworkAccessManager *networkManager;
-
-    QString videoId;
-
-    QList<Stream> streamsAudio;
-    QList<Stream> streamsVideo;
-    int audioHighStream;
-    int videoHighStream;
-    int audioLowStream;
-    int videoLowStream;
-
-
-    void processStream(QString data);
+    QStringList selectedTrackInfo;
 
 public:
-    explicit YoutubeVideoStreams(QObject *parent = 0);
-    ~YoutubeVideoStreams();
-
-signals:
-    void streamsAvailable(YoutubeVideoStreams *streams);
-    void streamURLAvailable(QString url);
-
-public slots:
-    void fetchStreams(QString videoId);
+    YoutubeWindow(QWidget *parent = 0);
+    ~YoutubeWindow();
 
 private slots:
-    void reply(QNetworkReply *reply);
+    void on_buttonSearch_clicked();
+    void on_buttonSearchRelated_clicked();
+    void on_buttonAdd_clicked();
+    void on_buttonPreferences_clicked();
 
-public:
-    QString getVideoId();
+    void processSearch(QJsonObject *result);
 
-    QList<Stream> getStreams();
-    Stream getStreamAudioHigh();
-    Stream getStreamAudioMedium();
-    Stream getStreamAudioLow();
-    Stream getStreamVideoHigh();
-    Stream getStreamVideoMedium();
-    Stream getStreamVideoLow();
+public slots:
+    void searchFor(QString videoTitle);
 };
 
-#endif // YOUTUBEVIDEOSTREAMS_H
+#endif // YOUTUBEWINDOW_H

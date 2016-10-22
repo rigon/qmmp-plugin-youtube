@@ -37,7 +37,7 @@
 static size_t curl_write_data(void *data, size_t size, size_t nmemb,
                               void *pointer)
 {
-    HttpStreamReader *dl = (HttpStreamReader *)pointer;
+    YoutubeStreamReader *dl = (YoutubeStreamReader *)pointer;
     dl->mutex()->lock ();
     size_t buf_start = dl->stream()->buf_fill;
     size_t data_size = size * nmemb;
@@ -53,7 +53,7 @@ static size_t curl_write_data(void *data, size_t size, size_t nmemb,
 static size_t curl_header(void *data, size_t size, size_t nmemb,
                           void *pointer)
 {
-    HttpStreamReader *dl = (HttpStreamReader *)pointer;
+    YoutubeStreamReader *dl = (YoutubeStreamReader *)pointer;
     dl->mutex()->lock ();
     size_t data_size = size * nmemb;
     if (data_size < 3)
@@ -67,12 +67,12 @@ static size_t curl_header(void *data, size_t size, size_t nmemb,
     header = header.trimmed ();
     if (header.left(4).contains("HTTP"))
     {
-        qDebug("HttpStreamReader: header received");
+        qDebug("YoutubeStreamReader: header received");
         //TODO open metadata socket
     }
     else if (header.left(4).contains("ICY"))
     {
-        qDebug("HttpStreamReader: shoutcast header received");
+        qDebug("YoutubeStreamReader: shoutcast header received");
         //dl->stream()->icy_meta_data = true;
     }
     else
@@ -80,7 +80,7 @@ static size_t curl_header(void *data, size_t size, size_t nmemb,
         QString key = QString::fromLatin1(header.left(header.indexOf(":")).trimmed().toLower());
         QByteArray value = header.right(header.size() - header.indexOf(":") - 1).trimmed();
         dl->stream()->header.insert(key, value);
-        qDebug("HttpStreamReader: key=%s, value=%s",qPrintable(key), value.constData());
+        qDebug("YoutubeStreamReader: key=%s, value=%s",qPrintable(key), value.constData());
 
         if (key == "icy-metaint")
         {
@@ -98,7 +98,7 @@ int curl_progress(void *pointer, double dltotal, double dlnow, double ultotal, d
     Q_UNUSED(dlnow);
     Q_UNUSED(ultotal);
     Q_UNUSED(ulnow);
-    HttpStreamReader *dl = (HttpStreamReader *)pointer;
+    YoutubeStreamReader *dl = (YoutubeStreamReader *)pointer;
     dl->mutex()->lock ();
     bool aborted = dl->stream()->aborted;
     dl->mutex()->unlock();
@@ -107,7 +107,7 @@ int curl_progress(void *pointer, double dltotal, double dlnow, double ultotal, d
     return 0;
 }
 
-HttpStreamReader::HttpStreamReader(const QString &url, YoutubeInputSource *parent) : QIODevice(parent)
+YoutubeStreamReader::YoutubeStreamReader(const QString &url, YoutubeInputSource *parent) : QIODevice(parent)
 {
     m_parent = parent;
     m_url = url;
@@ -142,7 +142,7 @@ HttpStreamReader::HttpStreamReader(const QString &url, YoutubeInputSource *paren
     settings.endGroup();
 }
 
-HttpStreamReader::~HttpStreamReader()
+YoutubeStreamReader::~YoutubeStreamReader()
 {
     abort();
     curl_global_cleanup();
@@ -158,28 +158,28 @@ HttpStreamReader::~HttpStreamReader()
 #endif
 }
 
-bool HttpStreamReader::atEnd () const
+bool YoutubeStreamReader::atEnd () const
 {
     return false;
 }
 
-qint64 HttpStreamReader::bytesToWrite () const
+qint64 YoutubeStreamReader::bytesToWrite () const
 {
     return -1;
 }
 
-void HttpStreamReader::close ()
+void YoutubeStreamReader::close ()
 {
     abort();
     QIODevice::close();
 }
 
-bool HttpStreamReader::isSequential () const
+bool YoutubeStreamReader::isSequential () const
 {
     return true;
 }
 
-bool HttpStreamReader::open (OpenMode mode)
+bool YoutubeStreamReader::open (OpenMode mode)
 {
     if (mode != QIODevice::ReadOnly)
         return false;
@@ -187,23 +187,23 @@ bool HttpStreamReader::open (OpenMode mode)
     return m_ready;
 }
 
-bool HttpStreamReader::seek (qint64 pos)
+bool YoutubeStreamReader::seek (qint64 pos)
 {
     Q_UNUSED(pos);
     return false;
 }
 
-qint64 HttpStreamReader::writeData(const char*, qint64)
+qint64 YoutubeStreamReader::writeData(const char*, qint64)
 {
     return -1;
 }
 
-void HttpStreamReader::downloadFile()
+void YoutubeStreamReader::downloadFile()
 {
     m_thread->start();
 }
 
-qint64 HttpStreamReader::readData(char* data, qint64 maxlen)
+qint64 YoutubeStreamReader::readData(char* data, qint64 maxlen)
 {
 
     qint64 len = 0;
@@ -241,24 +241,24 @@ qint64 HttpStreamReader::readData(char* data, qint64 maxlen)
     return len;
 }
 
-HttpStreamData *HttpStreamReader::stream()
+HttpStreamData *YoutubeStreamReader::stream()
 {
     return &m_stream;
 }
 
-QMutex *HttpStreamReader::mutex()
+QMutex *YoutubeStreamReader::mutex()
 {
     return &m_mutex;
 }
 
-QString HttpStreamReader::contentType()
+QString YoutubeStreamReader::contentType()
 {
     if (m_stream.header.contains("content-type"))
         return m_stream.header.value("content-type").toLower();
     return QString();
 }
 
-void HttpStreamReader::abort()
+void YoutubeStreamReader::abort()
 {
     m_mutex.lock();
     m_ready = false;
@@ -278,14 +278,14 @@ void HttpStreamReader::abort()
     }
 }
 
-qint64 HttpStreamReader::bytesAvailable() const
+qint64 YoutubeStreamReader::bytesAvailable() const
 {
     return QIODevice::bytesAvailable() + m_stream.buf_fill;
 }
 
-void HttpStreamReader::run()
+void YoutubeStreamReader::run()
 {
-    qDebug("HttpStreamReader: starting download thread");
+    qDebug("YoutubeStreamReader: starting download thread");
     char errorBuffer[CURL_ERROR_SIZE];
     m_handle = curl_easy_init();
     //proxy
@@ -345,10 +345,10 @@ void HttpStreamReader::run()
     m_stream.header.clear ();
     m_ready  = false;
     int return_code;
-    qDebug("HttpStreamReader: starting libcurl");
+    qDebug("YoutubeStreamReader: starting libcurl");
     m_mutex.unlock();
     return_code = curl_easy_perform(m_handle);
-    qDebug("HttpStreamReader: curl thread finished with code %d (%s)", return_code, errorBuffer);
+    qDebug("YoutubeStreamReader: curl thread finished with code %d (%s)", return_code, errorBuffer);
     if(!m_stream.aborted && !m_ready)
     {
         setErrorString(errorBuffer);
@@ -357,7 +357,7 @@ void HttpStreamReader::run()
 //    QIODevice::close();
 }
 
-qint64 HttpStreamReader::readBuffer(char* data, qint64 maxlen)
+qint64 YoutubeStreamReader::readBuffer(char* data, qint64 maxlen)
 {
     if (m_stream.buf_fill > 0 && !m_stream.aborted)
     {
@@ -370,7 +370,7 @@ qint64 HttpStreamReader::readBuffer(char* data, qint64 maxlen)
     return 0;
 }
 
-void HttpStreamReader::checkBuffer()
+void YoutubeStreamReader::checkBuffer()
 {
     if(m_stream.aborted)
         return;
@@ -398,7 +398,7 @@ void HttpStreamReader::checkBuffer()
     }
 }
 
-void HttpStreamReader::readICYMetaData()
+void YoutubeStreamReader::readICYMetaData()
 {
     uint8_t packet_size;
     m_metacount = 0;
@@ -422,13 +422,13 @@ void HttpStreamReader::readICYMetaData()
             m_mutex.lock();
         }
         qint64 l = readBuffer(packet, size);
-        qDebug("HttpStreamReader: ICY metadata: %s", packet);
+        qDebug("YoutubeStreamReader: ICY metadata: %s", packet);
         parseICYMetaData(packet, l);
     }
     m_mutex.unlock();
 }
 
-void HttpStreamReader::parseICYMetaData(char *data, qint64 size)
+void YoutubeStreamReader::parseICYMetaData(char *data, qint64 size)
 {
     if(!size)
         return;
@@ -440,7 +440,7 @@ void HttpStreamReader::parseICYMetaData(char *data, qint64 size)
         if(encoding.charset != ENCA_CS_UNKNOWN)
         {
             codec = QTextCodec::codecForName(enca_charset_name(encoding.charset,ENCA_NAME_STYLE_ENCA));
-            qDebug("HttpStreamReader: detected charset: %s",
+            qDebug("YoutubeStreamReader: detected charset: %s",
                    enca_charset_name(encoding.charset,ENCA_NAME_STYLE_ENCA));
             if(!codec)
                 codec = m_codec;
@@ -483,7 +483,7 @@ void HttpStreamReader::parseICYMetaData(char *data, qint64 size)
     }
 }
 
-void HttpStreamReader::sendStreamInfo(QTextCodec *codec)
+void YoutubeStreamReader::sendStreamInfo(QTextCodec *codec)
 {
     QHash<QString, QString> info;
     foreach (QString key, m_stream.header.keys())
@@ -493,7 +493,7 @@ void HttpStreamReader::sendStreamInfo(QTextCodec *codec)
     m_parent->addStreamInfo(info);
 }
 
-DownloadThread::DownloadThread(HttpStreamReader *parent) : QThread(parent)
+DownloadThread::DownloadThread(YoutubeStreamReader *parent) : QThread(parent)
 {
     m_parent = parent;
 }
