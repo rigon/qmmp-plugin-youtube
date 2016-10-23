@@ -69,7 +69,7 @@ Now, the Youtube plugin is accessible from the menu inside **Tools** option (you
 
 			 INCLUDEPATH += /usr/include/python3.5m
 
-   - `src/youtubedl.cpp`:
+   - `youtube/youtubedl.cpp`:
 
 			 "sys.path.append('/usr/lib/python3.5/site-packages')\n"
 
