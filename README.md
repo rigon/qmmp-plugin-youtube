@@ -65,7 +65,7 @@ Now, the Youtube plugin is accessible from the menu inside **Tools** option (you
 
  - The Python version is hard coded, the version used was `python 3.5m`. If you have a different version installed, edit the following files and change the referenced lines accordingly:
 
-   - `youtube.pro`:
+   - `youtube/youtube.pro`:
 
 			 INCLUDEPATH += /usr/include/python3.5m
 
