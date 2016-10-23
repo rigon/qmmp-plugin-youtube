@@ -76,7 +76,7 @@ Now, the Youtube plugin is accessible from the menu inside **Tools** option (you
 
 ## Important notes
 
-The plugin is not yet finished, but it is in a stage that already is usable.
+The plugin is not yet finished, but it is in a stage that is already usable.
 Currently, it is possible to search for videos on Youtube and add them to the selected playlist, search for similar videos and open them in the browser.
 
 If you are interested, you can also contribute to this project, that would be **AWESOME**. Feel free to send me a message.
