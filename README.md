@@ -1,6 +1,7 @@
 # Qmmp plugin for YouTube
 This is a plugin for Qt-based Multimedia Player (Qmmp) to search and play musics directly from YouTube.
 
+
 ## Requirements
 
 This plugin has some requirements, you have to install them:
@@ -14,19 +15,23 @@ This plugin has some requirements, you have to install them:
  - **QJson (http://qjson.sourceforge.net/)**<br>
    QJson is a Qt-based library that maps JSON data to `QVariant` objects and vice versa.
 
+
 ## Installation
 
 First, you have to download the source code by [Downloading a ZIP Archive](https://github.com/rigon/qmmp-plugin-youtube/archive/master.zip) or by cloning the repository:
 
 	git clone https://github.com/rigon/qmmp-plugin-youtube.git
 
-Now, it's time to compile. Move to inside the project location and issue:
+Now, let's compile. Extract the files (if necessary) and move to inside the project location.
+Then, run the following commands:
 
 	qmake
-	make
-	sudo cp libyoutube.so /usr/lib/qmmp/Transports
+	make -j4
+	
+Lastly, copy the newly compiled libraries into  to QMMP's plugin directory:
 
-With the last command, you are installing the library to QMMP's plugin directory.
+	sudo cp -v youtube/libyoutube.so /usr/lib/qmmp/Transports
+	sudo cp -v youtube/libyoutubeui.so /usr/lib/qmmp/General
 
 If you have problems to compile the project, have a look in the section [Known issues](#known-issues).
 
@@ -46,31 +51,33 @@ You can simply install it by running:
 Open QMMP. Now you have to activate the Youtube plugin.
 To do so, you have to do the next steps:
 
-**Settings** > **Plugins** > **General** > Check **Youtube Plugin**
+**QMMP main menu** > **Settings** > **Plugins** 
 
-Now, the Youtube plugin is accessible from the menu inside **Tools** option. Or you can press **Ctrl + Y** for quick access.
+and activate this two plugins:
+
+ - **Youtube Plugin** (libyoutube.so under the **Transports** section)
+ - **YoutubeUI Plugin** (libyoutubeui.so under the **General** section)
+
+Now, the Youtube plugin is accessible from the menu inside **Tools** option (you can press **Ctrl + Y** for quicker access). Alternatively, you can search for the selected track from the **track's context menu** > **Actions** > **Search track** (or using the shortcut **Meta + Y**).
+
 
 ## Known issues
 
- - The Python version is hard coded, the version used was ``python 3.5m``. If you have a different version installed, edit the following files and change the referenced lines accordingly:
+ - The Python version is hard coded, the version used was `python 3.5m`. If you have a different version installed, edit the following files and change the referenced lines accordingly:
 
-   - ``youtube.pro``:
+   - `youtube.pro`:
 
 			 INCLUDEPATH += /usr/include/python3.5m
 
-   - ``src/youtubedl.cpp``:
+   - `src/youtubedl.cpp`:
 
 			 "sys.path.append('/usr/lib/python3.5/site-packages')\n"
-
- - The plugin is not loaded when QMMP is started.
 
 
 ## Important notes
 
-The plugin is not yet finished, it only has the fundamentals functionalities.
-Currently, it is possible to search for videos on Youtube and add them to the selected playlist.
-
-I'm still working on new exciting features, to make it easier to use. I hope soon I will have more news!
+The plugin is not yet finished, but it is in a stage that already is usable.
+Currently, it is possible to search for videos on Youtube and add them to the selected playlist, search for similar videos and open them in the browser.
 
 If you are interested, you can also contribute to this project, that would be **AWESOME**. Feel free to send me a message.
 
