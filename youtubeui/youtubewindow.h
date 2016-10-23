@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2012 by Ilya Kotov                                      *
- *   forkotov02@hotmail.ru                                                 *
+ *   Copyright (C) 2016 by Ricardo Gonçalves                               *
+ *   ricardompgoncalves@gmail.com                                          *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,27 +17,46 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
-#ifndef STREAMBROWSERFACTORY_H
-#define STREAMBROWSERFACTORY_H
 
-#include <QObject>
-#include <QTranslator>
+#ifndef YOUTUBEWINDOW_H
+#define YOUTUBEWINDOW_H
+
 #include <QDialog>
+#include <QWidget>
+#include <QString>
+#include <QStringList>
+#include <QKeyEvent>
+#include <QJsonObject>
 
-#include <qmmpui/general.h>
-#include <qmmpui/generalfactory.h>
+#include "ui_youtubewindow.h"
 
-class YoutubeFactory : public QObject, public GeneralFactory
+namespace Ui {
+    class YoutubeWindow;
+}
+
+class YoutubeWindow : public QDialog
 {
-Q_OBJECT
-Q_PLUGIN_METADATA(IID "org.qmmp.qmmpui.GeneralFactoryInterface.1.0")
-Q_INTERFACES(GeneralFactory)
+    Q_OBJECT
+
+private:
+    Ui::YoutubeWindow *ui;
+
+    QStringList selectedTrackInfo;
+
 public:
-    const GeneralProperties properties() const;
-    QObject *create(QObject *parent);
-    QDialog *createConfigDialog(QWidget *parent);
-    void showAbout(QWidget *parent);
-    QTranslator *createTranslator(QObject *parent);
+    YoutubeWindow(QWidget *parent = 0);
+    ~YoutubeWindow();
+
+private slots:
+    void on_buttonSearch_clicked();
+    void on_buttonSearchRelated_clicked();
+    void on_buttonAdd_clicked();
+    void on_buttonPreferences_clicked();
+
+    void processSearch(QJsonObject *result);
+
+public slots:
+    void searchFor(QString videoTitle);
 };
 
-#endif
+#endif // YOUTUBEWINDOW_H

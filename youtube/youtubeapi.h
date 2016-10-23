@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2012 by Ilya Kotov                                      *
- *   forkotov02@hotmail.ru                                                 *
+ *   Copyright (C) 2016 by Ricardo Gonçalves                               *
+ *   ricardompgoncalves@gmail.com                                          *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,34 +18,47 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include <QAction>
-#include <QApplication>
-#include <qmmp/soundcore.h>
-#include <qmmpui/uihelper.h>
-#include <qmmpui/playlistmanager.h>
-#include <qmmpui/playlistitem.h>
-#include <qmmpui/mediaplayer.h>
+#ifndef YOUTUBEAPI_H
+#define YOUTUBEAPI_H
 
-#include "youtube.h"
-#include "youtubewindow.h"
+#include <QObject>
+#include <QString>
+#include <QMetaMethod>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QJsonObject>
 
-Youtube::Youtube(QObject *parent) : QObject(parent) {
-    m_action = new QAction(tr("YouTube"), this);
-    m_action->setIcon(QIcon::fromTheme("applications-internet"));
-    m_action->setShortcut(tr("Ctrl+Y"));
-    UiHelper::instance()->addAction(m_action, UiHelper::TOOLS_MENU);
 
-    connect(m_action, &QAction::triggered, this, &Youtube::showYoutubeWindow);
-}
+#define YOUTUBE_API(resource)   "https://www.googleapis.com/youtube/v3/" # resource
+#define YOUTUBE_API_SEARCH      YOUTUBE_API(search)
+#define YOUTUBE_API_VIDEOS      YOUTUBE_API(videos)
 
-Youtube::~Youtube() {
 
-}
+class YoutubeAPI : public QObject
+{
+    Q_OBJECT
 
-void Youtube::showYoutubeWindow() {
-    if(!m_streamWindow)
-        m_streamWindow = new YoutubeWindow(qApp->activeWindow());
+private:
+    QNetworkAccessManager *networkManager;
+    void runRequest(const char *url, QUrlQuery &urlQuery, void (YoutubeAPI::*method)(QNetworkReply *));
 
-    m_streamWindow->show();
-    m_streamWindow->activateWindow();
-}
+public:
+    explicit YoutubeAPI(QObject *parent = 0);
+    ~YoutubeAPI();
+
+public slots:
+    void searchList(QString queryTerm);
+    void searchRelated(QString id);
+    void videosList(QString id);
+
+private slots:
+    void replySearchList(QNetworkReply *reply);
+    void replyVideosList(QNetworkReply *reply);
+
+signals:
+    void searchListAvailable(QJsonObject *result);
+    void videosListAvailable(QHash<QString, QString> data);
+
+};
+
+#endif // YOUTUBEAPI_H

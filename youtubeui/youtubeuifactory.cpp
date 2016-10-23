@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2012 by Ilya Kotov                                      *
- *   forkotov02@hotmail.ru                                                 *
+ *   Copyright (C) 2016 by Ricardo Gonçalves                               *
+ *   ricardompgoncalves@gmail.com                                          *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,45 +21,59 @@
 #include <QObject>
 #include <QMessageBox>
 #include <QTranslator>
+#include <QList>
+#include <QDesktopServices>
 
-#include "youtube.h"
-#include "youtubefactory.h"
+#include <qmmpui/uihelper.h>
+#include <qmmpui/mediaplayer.h>
+#include <qmmpui/playlistmanager.h>
+#include <qmmpui/playlisttrack.h>
+
+#include "qurlimage.h"
+#include "youtubeui.h"
 #include "youtubepreferences.h"
+#include "youtubewindow.h"
+#include "youtubeuifactory.h"
 
 
-const GeneralProperties YoutubeFactory::properties() const
+YoutubeUIFactory::YoutubeUIFactory(QObject *parent) : QObject(parent)
 {
-    GeneralProperties properties;
-    properties.name = tr("YouTube Plugin");
-    properties.shortName = "youtube";
-    properties.hasAbout = true;
-    properties.hasSettings = false;     // TODO: Change to true
-    properties.visibilityControl = false;
-    return properties;
+
 }
 
-QObject *YoutubeFactory::create(QObject *parent)
+const GeneralProperties YoutubeUIFactory::properties() const
 {
-    return new Youtube(parent);
+    GeneralProperties p;
+    p.name = tr("YouTubeUI Plugin");
+    p.shortName = "youtubeui";
+    p.hasAbout = true;
+    p.hasSettings = true;     // TODO: Change to true
+    //p.visibilityControl = false;
+    return p;
 }
 
-QDialog *YoutubeFactory::createConfigDialog(QWidget *parent)
+QObject *YoutubeUIFactory::create(QObject *parent)
 {
-    return new YoutubePreferences(parent);
+    return new YoutubeUI(parent);
 }
 
-void YoutubeFactory::showAbout(QWidget *parent)
+QDialog *YoutubeUIFactory::createConfigDialog(QWidget *parent)
+{
+    return new YoutubePreferences(parent);;
+}
+
+void YoutubeUIFactory::showAbout(QWidget *parent)
 {
     QMessageBox::about(parent, tr("About YouTube Plugin"),
-                        tr("Qmmp YouTube Plugin")+"\n"+
-                        tr("This plugin allows to play musics and playlists from YouTube")+"\n"+
-                        tr("Written by: Ricardo Gonçalves <ricardompgoncalves@gmail.com>"));
+        tr("Qmmp YouTube Plugin")+"\n"+
+        tr("This plugin allows to play musics directly from YouTube videos")+"\n"+
+        tr("Written by: Ricardo Gonçalves <ricardompgoncalves@gmail.com>"));
 }
 
-QTranslator *YoutubeFactory::createTranslator(QObject *parent)
+QTranslator *YoutubeUIFactory::createTranslator(QObject *parent)
 {
     QTranslator *translator = new QTranslator(parent);
     QString locale = Qmmp::systemLanguageID();
-    translator->load(QString(":/streambrowser_plugin_") + locale);
+    translator->load(QString(":/youtube_plugin_") + locale);
     return translator;
 }

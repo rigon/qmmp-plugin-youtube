@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2012 by Ilya Kotov                                      *
- *   forkotov02@hotmail.ru                                                 *
+ *   Copyright (C) 2016 by Ricardo Gonçalves                               *
+ *   ricardompgoncalves@gmail.com                                          *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,31 +17,48 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
-#ifndef STREAMBROWSER_H
-#define STREAMBROWSER_H
 
-#include <QPointer>
-#include <qmmpui/general.h>
-#include <qmmp/qmmp.h>
-#include "youtubewindow.h"
+#ifndef YOUTUBEAPI_H
+#define YOUTUBEAPI_H
 
-class QAction;
-class YoutubeWindow;
+#include <QObject>
+#include <QString>
+#include <QMetaMethod>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QJsonObject>
 
 
-class Youtube : public QObject
+#define YOUTUBE_API(resource)   "https://www.googleapis.com/youtube/v3/" # resource
+#define YOUTUBE_API_SEARCH      YOUTUBE_API(search)
+#define YOUTUBE_API_VIDEOS      YOUTUBE_API(videos)
+
+
+class YoutubeAPI : public QObject
 {
-Q_OBJECT
-public:
-    Youtube(QObject *parent = 0);
-    ~Youtube();
-
-private slots:
-    void showYoutubeWindow();
+    Q_OBJECT
 
 private:
-    QAction *m_action;
-    QPointer<YoutubeWindow> m_streamWindow;
+    QNetworkAccessManager *networkManager;
+    void runRequest(const char *url, QUrlQuery &urlQuery, void (YoutubeAPI::*method)(QNetworkReply *));
+
+public:
+    explicit YoutubeAPI(QObject *parent = 0);
+    ~YoutubeAPI();
+
+public slots:
+    void searchList(QString queryTerm);
+    void searchRelated(QString id);
+    void videosList(QString id);
+
+private slots:
+    void replySearchList(QNetworkReply *reply);
+    void replyVideosList(QNetworkReply *reply);
+
+signals:
+    void searchListAvailable(QJsonObject *result);
+    void videosListAvailable(QHash<QString, QString> data);
+
 };
 
-#endif
+#endif // YOUTUBEAPI_H
