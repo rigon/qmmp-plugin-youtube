@@ -18,8 +18,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef HTTPINPUTSOURCE_H
-#define HTTPINPUTSOURCE_H
+#ifndef YOUTUBEINPUTSOURCE_H
+#define YOUTUBEINPUTSOURCE_H
 
 #include <QIODevice>
 #include <QString>
@@ -55,4 +55,4 @@ public slots:
     void fetchVideoMetaDataComplete(QHash<QString, QString> videoData);
 };
 
-#endif // HTTPINPUTSOURCE_H
+#endif // YOUTUBEINPUTSOURCE_H
