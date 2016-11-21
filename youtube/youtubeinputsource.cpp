@@ -31,7 +31,7 @@ static YoutubeDL *youtubeVideoStreams = NULL;
 
 YoutubeInputSource::YoutubeInputSource(const QString &url, QObject *parent) : InputSource(url, parent)
 {
-    this->videoID = url.mid(tr("youtube://").length());
+    this->videoID = url.mid(QString("youtube://").length());
 }
 
 void YoutubeInputSource::fetchStreamURLComplete(QString url)
