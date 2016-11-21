@@ -11,7 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 5): QT += widgets
 TARGET = youtube
 TEMPLATE = lib
 
-INCLUDEPATH += /usr/include/python3.5
+INCLUDEPATH += /usr/include/python3.5m
 unix:LIBS += -lqmmp -lqmmpui -lqjson -lPythonQt -lpython3.5m -lcurl
 
 SOURCES += \
