@@ -12,7 +12,7 @@ TARGET = youtube
 TEMPLATE = lib
 
 INCLUDEPATH += /usr/include/python3.5m
-unix:LIBS += -lqmmp -lqmmpui -lqjson -lPythonQt -lpython3.5m -lcurl
+unix:LIBS += -lqmmp -lqmmpui -lqjson -lPythonQt -lpython3.6m -lcurl
 
 SOURCES += \
     youtubefactory.cpp \
