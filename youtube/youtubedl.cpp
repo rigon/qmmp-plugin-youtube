@@ -28,7 +28,7 @@
 
 static QString script =
     "import sys\n"
-    "sys.path.append('/usr/lib/python3.5/site-packages')\n"
+    "sys.path.append('/usr/lib/python3.6/site-packages')\n"
     "from youtube_dl import YoutubeDL\n"
     "\n"
     "def get_stream(id):\n"
