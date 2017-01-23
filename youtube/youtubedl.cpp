@@ -27,8 +27,8 @@
 #include "youtubedl.h"
 
 static QString script =
-    "import sys\n"
-    "sys.path.append('/usr/lib/python3.6/site-packages')\n"
+    "import sys, site\n"
+    "sys.path += site.getsitepackages()\n"
     "from youtube_dl import YoutubeDL\n"
     "\n"
     "def get_stream(id):\n"
