@@ -14,6 +14,8 @@ TEMPLATE = lib
 INCLUDEPATH += /usr/include/python3.6m
 unix:LIBS += -lqmmp -lqmmpui -lqjson -lPythonQt -lcurl
 
+CONFIG += hide_symbols
+
 SOURCES += \
     youtubefactory.cpp \
     youtubeinputsource.cpp \
