@@ -13,6 +13,8 @@ TEMPLATE = lib
 
 unix:LIBS += -lqmmp -lqmmpui -lqjson
 
+CONFIG += hide_symbols
+
 SOURCES += youtubewindow.cpp \
 	youtubepreferences.cpp \
 	youtubeapi.cpp \
