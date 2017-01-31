@@ -33,7 +33,7 @@ Lastly, copy the newly compiled libraries into  to QMMP's plugin directory:
 	sudo cp -v youtube/libyoutube.so /usr/lib/qmmp/Transports
 	sudo cp -v youtube/libyoutubeui.so /usr/lib/qmmp/General
 
-If you have problems to compile the project, have a look in the section [Known issues](#known-issues).
+If you have problems to compile the project, have a look in the [issues section](//github.com/rigon/qmmp-plugin-youtube/labels/issue).
 
 
 ### ArchLinux users
@@ -61,19 +61,6 @@ and activate this two plugins:
 Now, the Youtube plugin is accessible from the menu inside **Tools** option (you can press **Ctrl + Y** for quicker access). Alternatively, you can search for the selected track from the **track's context menu** > **Actions** > **Search track** (or using the shortcut **Meta + Y**).
 
 
-## Known issues
-
- - The Python version is hard coded, the version used was `python 3.5m`. If you have a different version installed, edit the following files and change the referenced lines accordingly:
-
-   - `youtube/youtube.pro`:
-
-			 INCLUDEPATH += /usr/include/python3.5m
-
-   - `youtube/youtubedl.cpp`:
-
-			 "sys.path.append('/usr/lib/python3.5/site-packages')\n"
-
-
 ## Important notes
 
 The plugin is not yet finished, but it is in a stage that is already usable.
@@ -82,3 +69,12 @@ Currently, it is possible to search for videos on Youtube and add them to the se
 If you are interested, you can also contribute to this project, that would be **AWESOME**. Feel free to send me a message.
 
 Checkout the [Issues section](https://github.com/rigon/qmmp-plugin-youtube/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement) to see the exciting new features that we have planned.
+
+
+## License info
+
+This software is distributed under [GNU General Public License, version 2](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+
+Any misuse or violation of [Terms of Service of Youtube](https://www.youtube.com/static?template=terms) are the entire responsability of the user of this software.
+
+The user of this software accepts this terms by using this software.
