@@ -31,7 +31,7 @@ Then, run the following commands:
 Lastly, copy the newly compiled libraries into  to QMMP's plugin directory:
 
 	sudo cp -v youtube/libyoutube.so /usr/lib/qmmp/Transports
-	sudo cp -v youtube/libyoutubeui.so /usr/lib/qmmp/General
+	sudo cp -v youtubeui/libyoutubeui.so /usr/lib/qmmp/General
 
 If you have problems to compile the project, have a look in the [issues section](//github.com/rigon/qmmp-plugin-youtube/labels/issue).
 
