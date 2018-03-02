@@ -12,6 +12,12 @@ TARGET = youtubeui
 TEMPLATE = lib
 CONFIG += plugin
 
+isEmpty(LIBDIR) {
+   LIBDIR=/usr/lib
+}
+
+target.path = $${LIBDIR}/qmmp/General
+
 unix:LIBS += -lqmmp -lqmmpui -lqjson
 
 CONFIG += hide_symbols
@@ -33,3 +39,4 @@ HEADERS += youtubewindow.h \
 FORMS += youtubewindow.ui \
 	youtubepreferences.ui
 
+INSTALLS += target

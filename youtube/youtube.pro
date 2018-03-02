@@ -12,6 +12,12 @@ TARGET = youtube
 TEMPLATE = lib
 CONFIG += plugin
 
+isEmpty(LIBDIR) {
+   LIBDIR=/usr/lib
+}
+
+target.path = $${LIBDIR}/qmmp/Transports
+
 INCLUDEPATH += /usr/include/python3.6m
 unix:LIBS += -lqmmp -lqmmpui -lqjson -lPythonQt -lcurl
 
@@ -30,3 +36,5 @@ HEADERS += \
     youtubestreamreader.h \
     youtubedl.h \
     youtubeapi.h
+
+INSTALLS += target
