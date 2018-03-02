@@ -10,6 +10,7 @@ greaterThan(QT_MAJOR_VERSION, 5): QT += widgets
 
 TARGET = youtube
 TEMPLATE = lib
+CONFIG += plugin
 
 INCLUDEPATH += /usr/include/python3.6m
 unix:LIBS += -lqmmp -lqmmpui -lqjson -lPythonQt -lcurl
