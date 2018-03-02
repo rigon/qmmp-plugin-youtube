@@ -10,6 +10,13 @@ greaterThan(QT_MAJOR_VERSION, 5): QT += widgets
 
 TARGET = youtubeui
 TEMPLATE = lib
+CONFIG += plugin
+
+isEmpty(LIBDIR) {
+   LIBDIR=/usr/lib
+}
+
+target.path = $${LIBDIR}/qmmp/General
 
 unix:LIBS += -lqmmp -lqmmpui -lqjson
 
@@ -32,3 +39,4 @@ HEADERS += youtubewindow.h \
 FORMS += youtubewindow.ui \
 	youtubepreferences.ui
 
+INSTALLS += target
